@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+  - "12"
+dist: trusty
+sudo: required
+addons:
+  chrome: stable
+cache:
+  yarn: true
+  directories:
+    - node_modules
+install:
+  - yarn
+script:
+  - yarn build
+  - yarn test

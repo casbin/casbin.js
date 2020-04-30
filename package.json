@@ -1,0 +1,28 @@
+{
+  "name": "casbin.js",
+  "version": "1.0.0",
+  "main": "dist/casbin.js",
+  "repository": "https://github.com/romitkarmakar/casbin.js.git",
+  "author": "Romit Karmakar <romitkarmakar@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack",
+    "develop": "webpack --mode development --watch",
+    "test": "karma start --single-run --browsers ChromeHeadless karma.conf.js"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "chai": "^4.2.0",
+    "karma": "^5.0.3",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^3.1.0",
+    "karma-mocha": "^2.0.1",
+    "mocha": "^7.1.2",
+    "mocha-loader": "^5.0.0",
+    "ts-loader": "^7.0.2",
+    "typescript": "^3.8.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
