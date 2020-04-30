@@ -1,10 +1,12 @@
 {
   "compilerOptions": {
     "outDir": "./dist/",
-    "noImplicitAny": true,
     "sourceMap": true,
+    "moduleResolution": "node",
     "module": "es6",
     "target": "es2016",
+    "strict": true,
+    "strictPropertyInitialization": false,
     "allowJs": true
   }
 }

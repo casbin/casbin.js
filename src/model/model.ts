@@ -1,0 +1,327 @@
+import * as _ from 'lodash';
+import * as rbac from '../rbac/index';
+import * as util from '../util/index';
+import { Config, ConfigInterface } from '../config';
+import { Assertion } from './assertion';
+import { logPrint } from '../log/index';
+
+export const sectionNameMap: { [index: string]: string } = {
+  r: 'request_definition',
+  p: 'policy_definition',
+  g: 'role_definition',
+  e: 'policy_effect',
+  m: 'matchers'
+};
+
+export const requiredSections = ['r', 'p', 'e', 'm'];
+
+export class Model {
+  // Model represents the whole access control model.
+  // Mest-map is the collection of assertions, can be "r", "p", "g", "e", "m".
+  public model: Map<string, Map<string, Assertion>>;
+
+  /**
+   * constructor is the constructor for Model.
+   */
+  constructor() {
+    this.model = new Map<string, Map<string, Assertion>>();
+  }
+
+  private loadAssertion(cfg: ConfigInterface, sec: string, key: string): boolean {
+    const secName = sectionNameMap[sec];
+    const value = cfg.getString(`${secName}::${key}`);
+    return this.addDef(sec, key, value);
+  }
+
+  private getKeySuffix(i: number): string {
+    if (i === 1) {
+      return '';
+    }
+
+    return _.toString(i);
+  }
+
+  private loadSection(cfg: ConfigInterface, sec: string): void {
+    let i = 1;
+    for (;;) {
+      if (!this.loadAssertion(cfg, sec, sec + this.getKeySuffix(i))) {
+        break;
+      } else {
+        i++;
+      }
+    }
+  }
+
+  // addDef adds an assertion to the model.
+  public addDef(sec: string, key: string, value: string): boolean {
+    if (value === '') {
+      return false;
+    }
+
+    const ast = new Assertion();
+    ast.key = key;
+    ast.value = value;
+
+    if (sec === 'r' || sec === 'p') {
+      const tokens = value.split(', ');
+
+      for (let i = 0; i < tokens.length; i++) {
+        tokens[i] = key + '_' + tokens[i];
+      }
+
+      ast.tokens = tokens;
+    } else if (sec === 'm') {
+      const stringArguments = value.match(/\"(.*?)\"/g) || [];
+
+      stringArguments.forEach((n, index) => {
+        value = value.replace(n, `$<${index}>`);
+      });
+
+      value = util.removeComments(util.escapeAssertion(value));
+
+      stringArguments.forEach((n, index) => {
+        value = value.replace(`$<${index}>`, n);
+      });
+
+      ast.value = value;
+    } else {
+      ast.value = util.removeComments(util.escapeAssertion(value));
+    }
+
+    const nodeMap = this.model.get(sec);
+
+    if (nodeMap) {
+      nodeMap.set(key, ast);
+    } else {
+      const assertionMap = new Map<string, Assertion>();
+      assertionMap.set(key, ast);
+      this.model.set(sec, assertionMap);
+    }
+
+    return true;
+  }
+
+  // loadModel loads the model from model CONF file.
+  // public loadModel(path: string): void {
+  //   const cfg = Config.newConfig(path);
+
+  //   this.loadModelFromConfig(cfg);
+  // }
+
+  // loadModelFromText loads the model from the text.
+  public loadModelFromText(text: string): void {
+    const cfg = Config.newConfigFromText(text);
+
+    this.loadModelFromConfig(cfg);
+  }
+
+  public loadModelFromConfig(cfg: ConfigInterface): void {
+    for (const s in sectionNameMap) {
+      this.loadSection(cfg, s);
+    }
+
+    const ms: string[] = [];
+    requiredSections.forEach(n => {
+      if (!this.hasSection(n)) {
+        ms.push(sectionNameMap[n]);
+      }
+    });
+
+    if (ms.length > 0) {
+      throw new Error(`missing required sections: ${ms.join(',')}`);
+    }
+  }
+
+  private hasSection(sec: string): boolean {
+    return this.model.get(sec) !== undefined;
+  }
+
+  // printModel prints the model to the log.
+  public printModel(): void {
+    logPrint('Model:');
+    this.model.forEach((value, key) => {
+      value.forEach((ast, astKey) => {
+        logPrint(`${key}.${astKey}: ${ast.value}`);
+      });
+    });
+  }
+
+  // buildRoleLinks initializes the roles in RBAC.
+  public async buildRoleLinks(rm: rbac.RoleManager): Promise<void> {
+    const astMap = this.model.get('g');
+    if (!astMap) {
+      return;
+    }
+    for (const value of astMap.values()) {
+      await value.buildRoleLinks(rm);
+    }
+  }
+
+  // clearPolicy clears all current policy.
+  public clearPolicy(): void {
+    this.model.forEach((value, key) => {
+      if (key === 'p' || key === 'g') {
+        value.forEach(ast => {
+          ast.policy = [];
+        });
+      }
+    });
+  }
+
+  // getPolicy gets all rules in a policy.
+  public getPolicy(sec: string, key: string): string[][] {
+    const policy: string[][] = [];
+
+    const ast = this.model.get(sec)?.get(key);
+    if (ast) {
+      policy.push(...ast.policy);
+    }
+    return policy;
+  }
+
+  // hasPolicy determines whether a model has the specified policy rule.
+  public hasPolicy(sec: string, key: string, rule: string[]): boolean {
+    const ast = this.model.get(sec)?.get(key);
+    if (!ast) {
+      return false;
+    }
+    return ast.policy.some((n: string[]) => util.arrayEquals(n, rule));
+  }
+
+  // addPolicy adds a policy rule to the model.
+  public addPolicy(sec: string, key: string, rule: string[]): boolean {
+    if (!this.hasPolicy(sec, key, rule)) {
+      const ast = this.model.get(sec)?.get(key);
+      if (!ast) {
+        return false;
+      }
+      ast.policy.push(rule);
+      return true;
+    }
+
+    return false;
+  }
+
+  // removePolicy removes a policy rule from the model.
+  public removePolicy(sec: string, key: string, rule: string[]): boolean {
+    if (this.hasPolicy(sec, key, rule)) {
+      const ast = this.model.get(sec)?.get(key);
+      if (!ast) {
+        return true;
+      }
+      ast.policy = _.filter(ast.policy, r => !util.arrayEquals(rule, r));
+      return true;
+    }
+
+    return false;
+  }
+
+  // getFilteredPolicy gets rules based on field filters from a policy.
+  public getFilteredPolicy(sec: string, key: string, fieldIndex: number, ...fieldValues: string[]): string[][] {
+    const res: string[][] = [];
+    const ast = this.model.get(sec)?.get(key);
+    if (!ast) {
+      return res;
+    }
+    for (const rule of ast.policy) {
+      let matched = true;
+      for (let i = 0; i < fieldValues.length; i++) {
+        const fieldValue = fieldValues[i];
+        if (fieldValue !== '' && rule[fieldIndex + i] !== fieldValue) {
+          matched = false;
+          break;
+        }
+      }
+
+      if (matched) {
+        res.push(rule);
+      }
+    }
+
+    return res;
+  }
+
+  // removeFilteredPolicy removes policy rules based on field filters from the model.
+  public removeFilteredPolicy(sec: string, key: string, fieldIndex: number, ...fieldValues: string[]): boolean {
+    const res = [];
+    let bool = false;
+    const ast = this.model.get(sec)?.get(key);
+    if (!ast) {
+      return bool;
+    }
+    for (const rule of ast.policy) {
+      let matched = true;
+      for (let i = 0; i < fieldValues.length; i++) {
+        const fieldValue = fieldValues[i];
+        if (fieldValue !== '' && rule[fieldIndex + i] !== fieldValue) {
+          matched = false;
+          break;
+        }
+      }
+
+      if (matched) {
+        bool = true;
+      } else {
+        res.push(rule);
+      }
+    }
+    ast.policy = res;
+
+    return bool;
+  }
+
+  // getValuesForFieldInPolicy gets all values for a field for all rules in a policy, duplicated values are removed.
+  public getValuesForFieldInPolicy(sec: string, key: string, fieldIndex: number): string[] {
+    const values: string[] = [];
+    const ast = this.model.get(sec)?.get(key);
+    if (!ast) {
+      return values;
+    }
+    return util.arrayRemoveDuplicates(ast.policy.map((n: string[]) => n[fieldIndex]));
+  }
+
+  // printPolicy prints the policy to log.
+  public printPolicy(): void {
+    logPrint('Policy:');
+    this.model.forEach((map, key) => {
+      if (key === 'p' || key === 'g') {
+        map.forEach(ast => {
+          logPrint(`key, : ${ast.value}, : , ${ast.policy}`);
+        });
+      }
+    });
+  }
+}
+
+/**
+ * newModel creates a model.
+ */
+export function newModel(...text: string[]): Model {
+  const m = new Model();
+  
+  if (text.length === 1) {
+    m.loadModelFromText(text[0]);
+  } else if (text.length !== 0) {
+    throw new Error('Invalid parameters for model.');
+  }
+
+  return m;
+}
+
+// /**
+//  * newModelFromFile creates a model from a .CONF file.
+//  */
+// export function newModelFromFile(path: string): Model {
+//   const m = new Model();
+//   m.loadModel(path);
+//   return m;
+// }
+
+/**
+ * newModelFromString creates a model from a string which contains model text.
+ */
+export function newModelFromString(text: string): Model {
+  const m = new Model();
+  m.loadModelFromText(text);
+  return m;
+}
