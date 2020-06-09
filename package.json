@@ -1,0 +1,27 @@
+{
+  "name": "casbin.js",
+  "version": "0.0.1",
+  "main": "`index.js",
+  "repository": "https://github.com/kingiw/casbin.js.git",
+  "author": "kingiw <kingiw@hotmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "lint": "yarn eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "build": "tsc",
+    "test": "jest --config jestconfig.json"
+  },
+  "devDependencies": {
+    "@types/jest": "^25.2.3",
+    "@typescript-eslint/eslint-plugin": "^3.2.0",
+    "@typescript-eslint/parser": "^3.2.0",
+    "eslint": "^7.2.0",
+    "express": "^4.17.1",
+    "jest": "^26.0.1",
+    "ts-jest": "^26.1.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "axios": "^0.19.2"
+  }
+}
