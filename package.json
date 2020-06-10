@@ -6,7 +6,7 @@
   "author": "kingiw <kingiw@hotmail.com>",
   "license": "MIT",
   "scripts": {
-    "format": "prettier --write src/**/*.ts",
+    "format": "prettier --write 'src/**/*.ts'",
     "lint": "yarn eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "build": "tsc",
     "test": "jest --config jestconfig.json"
