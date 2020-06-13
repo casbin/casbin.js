@@ -2,23 +2,25 @@ import * as http from "http";
 import express from 'express';
 import { newEnforcer, Enforcer } from 'casbin';
 
-
 class CasbinService {
     private enforcer! : Enforcer;
     
     public async run() {
+        // RBAC API doesn't support RBAC w/ domain.
         // this.enforcer = await newEnforcer('./src/__test__/example/rbac_with_domains_model.conf', './src/__test__/example/rbac_with_domains_policy.csv');
         this.enforcer = await newEnforcer('./src/__test__/example/rbac_model.conf', './src/__test__/example/rbac_policy.csv');
     }
     
-    // TODO: Create an interface for getting all the policies
     public async getProfiles(sub: string) : Promise<string> {
         const policies = await this.enforcer.getImplicitPermissionsForUser(sub);
-        // policies.forEach(policy => {
-        //     policy[2]
-        // })
-        console.log(policies);
-        return "123";
+        let profiles : { [key:string]: string[] } = {};
+        policies.forEach(policy => {
+            if (!profiles.hasOwnProperty(policy[2])) {
+                profiles[policy[2]] = [];
+            }
+            profiles[policy[2]].push(policy[1]);
+        })
+        return JSON.stringify(profiles);
     }
 }
 

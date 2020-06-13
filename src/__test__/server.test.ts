@@ -20,7 +20,12 @@ describe('Communication with server', () => {
 
     test('Request for /api/casbin', async () => {
         const enforcer = new Enforcer('http://localhost:4000/api/casbin?casbin_subject=alice');
-        await enforcer.getData();
+        const respData = await enforcer.getData();
+        const data = JSON.parse(respData);
+        expect(data).toMatchObject({
+            read: ['data1', 'data2'],
+            write: ['data2']
+        })
     });
 
     afterAll(() => server.terminate());
