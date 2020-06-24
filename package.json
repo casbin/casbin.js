@@ -1,8 +1,9 @@
 {
   "name": "casbin.js",
   "version": "0.0.1",
-  "main": "`index.js",
-  "repository": "https://github.com/kingiw/casbin.js.git",
+  "main": "./lib/index.js",
+  "types": "./lib.index.d.ts",
+  "repository": "https://github.com/casbin/casbin.js.git",
   "author": "kingiw <kingiw@hotmail.com>",
   "license": "MIT",
   "scripts": {
