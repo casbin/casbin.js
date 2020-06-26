@@ -13,9 +13,9 @@ class CasbinService {
     
     public async getProfiles(sub: string) : Promise<string> {
         const policies = await this.enforcer.getImplicitPermissionsForUser(sub);
-        let profiles : { [key:string]: string[] } = {};
+        const profiles : { [key:string]: string[] } = {};
         policies.forEach(policy => {
-            if (!profiles.hasOwnProperty(policy[2])) {
+            if (!(policy[2] in profiles)) {
                 profiles[policy[2]] = [];
             }
             profiles[policy[2]].push(policy[1]);
