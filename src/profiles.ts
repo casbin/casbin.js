@@ -15,13 +15,17 @@ export default class Profiles {
         }
     }
 
+    public getProfilesJson() : {[key: string]: string[]} {
+        const obj : {[key: string]: string[]} = {};
+        this.data.forEach((value, key) => (obj[key] = value));
+        return obj;
+    }
+
     /*
         Parse the profiles into JSON string
     */
     public getProfilesString() : string {
-        const obj : {[key: string]: string[]} = {};
-        this.data.forEach((value, key) => (obj[key] = value));
-        return JSON.stringify(obj);
+        return JSON.stringify(this.getProfilesJson());
     }
 
     public getTargetsFromAction(action: string) : Array<string> {

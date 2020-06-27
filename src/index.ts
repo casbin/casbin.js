@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Profiles from './profiles';
 
 interface BaseResponse {
     message: string;
@@ -8,7 +9,7 @@ interface BaseResponse {
 export class Enforcer {
     private endpoint: string;
     private user : string | undefined;
-    private profiles: {[key: string]: string[]} = {};
+    private profiles = new Profiles();
 
     public constructor(endpoint: string) {
         this.endpoint = endpoint;
@@ -18,7 +19,7 @@ export class Enforcer {
      * Get the profiles.
      */
     public getProfiles() : {[key: string]: string[]} {
-        return this.profiles;
+        return this.profiles.getProfilesJson();
     }
 
     /**
@@ -26,7 +27,7 @@ export class Enforcer {
      */
     public async syncUserProfiles(): Promise<void> {
         const resp = await axios.get<BaseResponse>(`${this.endpoint}?casbin_subject=${this.user}`);
-        this.profiles = JSON.parse(resp.data.data);
+        this.profiles.loadFromString(resp.data.data);
         console.log("syncUserProfiles is called")
     }
 
