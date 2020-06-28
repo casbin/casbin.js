@@ -1,0 +1,13 @@
+language: node_js
+
+sudo: false
+
+node_js:
+  - '12'
+  - 'stable'
+
+install: yarn install
+
+script:
+  - yarn run lint
+  - yarn run test
