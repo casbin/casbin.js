@@ -29,4 +29,13 @@ describe('Profiles unit test', () => {
         //     expectArrayEquivalence<string>(profiles.getTargetsFromAction(item), policyExample[item]);
         // })
     })
+
+    test('Get action-object mapping', () => {
+        // TODO
+    });
+    
+    test('Get object-action mapping', () => {
+        // TODO
+    })
+
 })
