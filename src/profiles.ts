@@ -61,4 +61,13 @@ export default class Profiles {
     public getObjectsActions() : Map<string, Array<string>> {
         return this.objActData;
     }
+
+    public check(action : string, object : string) : boolean {
+        const objects = this.actObjData.get(action);
+        if (objects == undefined) {
+            return false;
+        } else {
+            return objects.includes(object);
+        }
+    }
 }

@@ -43,11 +43,30 @@ export class Enforcer {
         }        
     }
 
-    /**
-     * To enforce if the user have the authority to perform `act` on `obj`
-     */
-    public async enforce(obj: string, act: string): Promise<void> {
-        throw new Error('Not implemented');
+    public can(action: string, object: string): boolean {
+        return this.profiles.check(action, object);
+    }
+
+    public cannot(action: string, object: string): boolean {
+        return !this.profiles.check(action, object);
+    }
+
+    public canAll(action: string, objects: Array<string>) : boolean {
+        objects.forEach(object => {
+            if (!this.profiles.check(action, object)) {
+                return false;
+            }
+        })
+        return true;
+    }
+
+    public canAny(action: string, objects: Array<string>) : boolean {
+        objects.forEach(object => {
+            if (this.profiles.check(action, object)) {
+                return true;
+            }
+        })
+        return false;
     }
 
 }
