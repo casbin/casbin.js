@@ -6,7 +6,7 @@ interface BaseResponse {
     data: any;
 }
 
-export class Enforcer {
+export class Authorizer {
     private endpoint: string;
     private user : string | undefined;
     private profiles = new Profiles();
@@ -36,7 +36,7 @@ export class Enforcer {
     }
 
     /**
-     * Set the user subject for the enforcer
+     * Set the user subject for the authroizer
      * @param user The current user
      */
     public async setUser(user : string) : Promise<void> {
