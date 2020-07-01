@@ -58,20 +58,20 @@ export class Authorizer {
     }
 
     public canAll(action: string, objects: Array<string>) : boolean {
-        objects.forEach(object => {
-            if (!this.profiles.check(action, object)) {
+        for (let i = 0; i < objects.length; ++i) {
+            if (!this.profiles.check(action, objects[i])) {
                 return false;
             }
-        })
+        }
         return true;
     }
 
     public canAny(action: string, objects: Array<string>) : boolean {
-        objects.forEach(object => {
-            if (this.profiles.check(action, object)) {
+        for (let i = 0; i < objects.length; ++i) {
+            if (this.profiles.check(action, objects[i])) {
                 return true;
             }
-        })
+        }
         return false;
     }
 
