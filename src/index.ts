@@ -7,11 +7,11 @@ interface BaseResponse {
 }
 
 export class Authorizer {
-    private endpoint: string;
+    private endpoint: string | undefined;
     private user : string | undefined;
     private profiles = new Profiles();
 
-    public constructor(endpoint: string) {
+    public constructor(endpoint?: string) {
         this.endpoint = endpoint;
     }
 
@@ -30,9 +30,11 @@ export class Authorizer {
      * Get the authority of a given user from Casbin core
      */
     public async syncUserProfiles(): Promise<void> {
-        const resp = await axios.get<BaseResponse>(`${this.endpoint}?casbin_subject=${this.user}`);
-        this.profiles.loadFromString(resp.data.data);
-        console.log("syncUserProfiles is called")
+        if (this.endpoint !== undefined) {
+            const resp = await axios.get<BaseResponse>(`${this.endpoint}?casbin_subject=${this.user}`);
+            this.profiles.loadFromString(resp.data.data);
+            console.log("syncUserProfiles is called")
+        }
     }
 
     /**
