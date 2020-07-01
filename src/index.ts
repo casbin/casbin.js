@@ -22,6 +22,10 @@ export class Enforcer {
         return this.profiles.getProfilesJson();
     }
 
+    public setProfiles(jsonProfiles : string) : void{
+        this.profiles.loadFromString(jsonProfiles);
+    }
+
     /**
      * Get the authority of a given user from Casbin core
      */
