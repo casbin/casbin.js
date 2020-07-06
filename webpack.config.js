@@ -1,10 +1,16 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 module.exports = {
   entry: './src/index.ts',
   mode: 'development',
   devtool: 'inline-source-map',
+  devServer: {
+      contentBase: './dist',
+      port: 9001
+  },
   module: {
     rules: [
       {
@@ -25,5 +31,11 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+        'title': 'Development',
+        'filename': 'index.html',
+        'template': './src/webpack-dev-server-template.html',
+        'inject': false
+    })
   ]
 };

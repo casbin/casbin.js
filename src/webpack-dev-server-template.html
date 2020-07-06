@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body>
+      <p>This is a webpack development test page.</p>
+      <script src="casbin.js"></script>
+      <script>
+          const authorizer = new casbin.Authorizer();
+      </script>
+  </body>
+</html>
