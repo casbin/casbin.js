@@ -23,7 +23,7 @@ export class Authorizer {
         return this.permission.getPermissionJson();
     }
 
-    public setPermission(permission : object | string) : void{
+    public setPermission(permission : Record<string, unknown> | string) : void{
         this.permission.load(permission);
     }
 

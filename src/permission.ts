@@ -10,7 +10,7 @@ export default class Permission {
     }
     
 
-    public load(permission : string | object) : void {
+    public load(permission : string | Record<string, unknown>) : void {
         let p : StringKV;
         if (typeof(permission) == 'string') {
             p = JSON.parse(permission) as StringKV;
