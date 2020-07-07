@@ -16,7 +16,7 @@ describe('Communication with server', () => {
     test('Request for /api/casbin', async () => {
         const authorizer = new Authorizer('http://localhost:4000/api/casbin');
         await authorizer.setUser('alice');
-        expect(authorizer.getProfiles()).toMatchObject({
+        expect(authorizer.getPermission()).toMatchObject({
             read: ['data1', 'data2'],
             write: ['data2']
         })

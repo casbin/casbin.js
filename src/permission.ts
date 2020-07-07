@@ -1,4 +1,4 @@
-export default class Profiles {
+export default class Permission {
     private actObjData : Map<string, Array<string>>;
     private objActData : Map<string, Array<string>>;
 
@@ -8,7 +8,7 @@ export default class Profiles {
     }
     
     /*
-        Load the profiles from a JSON string
+        Load the Permission from a JSON string
     */
     public loadFromString(s : string) : void {
         const jsonObj = JSON.parse(s);
@@ -32,17 +32,17 @@ export default class Profiles {
 
     }
 
-    public getProfilesJson() : {[key: string]: string[]} {
+    public getPermissionJson() : {[key: string]: string[]} {
         const obj : {[key: string]: string[]} = {};
         this.actObjData.forEach((value, key) => (obj[key] = value));
         return obj;
     }
 
     /*
-        Parse the profiles into JSON string
+        Parse the permission into JSON string
     */
-    public getProfilesString() : string {
-        return JSON.stringify(this.getProfilesJson());
+    public getPermissionString() : string {
+        return JSON.stringify(this.getPermissionJson());
     }
 
     public getTargetsFromAction(action: string) : Array<string> {

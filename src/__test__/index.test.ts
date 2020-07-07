@@ -15,18 +15,18 @@ test('Mock functions', async () => {
     // TODO: Use mock function to get response object
     // const authorizer = new Authorizer('http://localhost:4000');
     // authorizer.setUser('alice');
-    // expect(authorizer.getProfiles()).toMatchObject(respObj);
+    // expect(authorizer.getPermission()).toMatchObject(respObj);
 
     // expect(mockedAxios.get('http://localhost:4000/api/casbin?casbin_subject=alice')).toMatchObject(respObj);
 });
 
 test('Authorizer', () => {
-    const profilesObj = {
+    const permissionObj = {
         read: ['data1', 'data2', 'data3'],
         write: ['data1']
     }
     const authorizer = new Authorizer();
-    authorizer.setProfiles(JSON.stringify(profilesObj));
+    authorizer.setPermission(JSON.stringify(permissionObj));
     // can
     expect(authorizer.can('read', 'data1')).toBe(true);
     expect(authorizer.can('read', 'data4')).toBe(false);

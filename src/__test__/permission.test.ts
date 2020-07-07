@@ -1,10 +1,10 @@
-import Profiles from '../profiles';
-describe('Profiles unit test', () => {
+import Permission from '../permission';
+describe('Permission unit test', () => {
     const policyExample = {
         'read': ['data1', 'data2'],
         'write': ['data2']
     }
-    const profiles = new Profiles();
+    const permission = new Permission();
 
     // From https://stackoverflow.com/a/57428906/7409994
     const expectArrayEquivalence = <T>(actual: T[], expected: T[]) => {
@@ -12,21 +12,20 @@ describe('Profiles unit test', () => {
         expect(expected).toEqual(expect.arrayContaining(actual));
       };
     
-    test('Load profiles from JSON string', () => {
-        const s = JSON.stringify(policyExample);
-        // let profiles : Profiles = new Profiles();
-        profiles.loadFromString(s);
-        const t = profiles.getProfilesString();
+    test('Load permission from JSON string', () => {
+        const s = JSON.stringify(policyExample);\
+        permission.loadFromString(s);
+        const t = permission.getPermissionString();
         expect(JSON.parse(t)).toMatchObject(policyExample);
     })
 
     test('Get targets from an action', () => {
-        profiles.loadFromString(JSON.stringify(policyExample));
-        expectArrayEquivalence<string>(profiles.getTargetsFromAction('read'), policyExample['read']);
-        expectArrayEquivalence<string>(profiles.getTargetsFromAction('write'), policyExample['write']);
+        permission.loadFromString(JSON.stringify(policyExample));
+        expectArrayEquivalence<string>(permission.getTargetsFromAction('read'), policyExample['read']);
+        expectArrayEquivalence<string>(permission.getTargetsFromAction('write'), policyExample['write']);
         // ?: The following implementation doesn't work. Help wanted.
         // ['read', 'write'].forEach((item :string) => {
-        //     expectArrayEquivalence<string>(profiles.getTargetsFromAction(item), policyExample[item]);
+        //     expectArrayEquivalence<string>(permission.getTargetsFromAction(item), policyExample[item]);
         // })
     })
 
