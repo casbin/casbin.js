@@ -1,6 +1,7 @@
 import * as http from "http";
 import express from 'express';
 import { newEnforcer, Enforcer } from 'casbin';
+import { StringKV } from '../types';
 
 class CasbinService {
     private enforcer! : Enforcer;
@@ -11,16 +12,16 @@ class CasbinService {
         this.enforcer = await newEnforcer('./src/__test__/example/rbac_model.conf', './src/__test__/example/rbac_policy.csv');
     }
     
-    public async getProfiles(sub: string) : Promise<string> {
+    public async getPermission(sub: string) : Promise<StringKV> {
         const policies = await this.enforcer.getImplicitPermissionsForUser(sub);
-        const profiles : { [key:string]: string[] } = {};
+        const permission : StringKV = {};
         policies.forEach(policy => {
-            if (!(policy[2] in profiles)) {
-                profiles[policy[2]] = [];
+            if (!(policy[2] in permission)) {
+                permission[policy[2]] = [];
             }
-            profiles[policy[2]].push(policy[1]);
+            permission[policy[2]].push(policy[1]);
         })
-        return JSON.stringify(profiles);
+        return permission;
     }
 }
 
@@ -47,7 +48,7 @@ class TestServer {
         });
         this.app.get('/api/casbin', async (req: express.Request, res: express.Response) => {
             const sub = String(req.query["casbin_subject"]);
-            const policies = await this.casbinServ.getProfiles(sub);
+            const policies = await this.casbinServ.getPermission(sub);
             res.status(200).json({
                 message: 'ok',
                 data: policies

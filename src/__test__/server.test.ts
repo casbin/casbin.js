@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { Enforcer } from '../index';
+import { Authorizer } from '../index';
 import TestServer from './server';
 import Axios from 'axios';
 
@@ -14,9 +14,9 @@ describe('Communication with server', () => {
     });
 
     test('Request for /api/casbin', async () => {
-        const enforcer = new Enforcer('http://localhost:4000/api/casbin');
-        await enforcer.setUser('alice');
-        expect(enforcer.getProfiles()).toMatchObject({
+        const authorizer = new Authorizer('http://localhost:4000/api/casbin');
+        await authorizer.setUser('alice');
+        expect(authorizer.getPermission()).toMatchObject({
             read: ['data1', 'data2'],
             write: ['data2']
         })
