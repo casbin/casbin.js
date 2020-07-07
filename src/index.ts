@@ -23,8 +23,8 @@ export class Authorizer {
         return this.permission.getPermissionJson();
     }
 
-    public setPermission(jsonPermission : string) : void{
-        this.permission.loadFromString(jsonPermission);
+    public setPermission(permission : object | string) : void{
+        this.permission.load(permission);
     }
 
     /**
@@ -33,7 +33,7 @@ export class Authorizer {
     public async syncUserPermission(): Promise<void> {
         if (this.endpoint !== undefined) {
             const resp = await axios.get<BaseResponse>(`${this.endpoint}?casbin_subject=${this.user}`);
-            this.permission.loadFromString(resp.data.data);
+            this.permission.load(resp.data.data);
             console.log("syncUserPermission is called")
         }
     }

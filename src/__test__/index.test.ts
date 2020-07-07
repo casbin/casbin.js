@@ -26,7 +26,7 @@ test('Authorizer', () => {
         write: ['data1']
     }
     const authorizer = new Authorizer();
-    authorizer.setPermission(JSON.stringify(permissionObj));
+    authorizer.setPermission(permissionObj);
     // can
     expect(authorizer.can('read', 'data1')).toBe(true);
     expect(authorizer.can('read', 'data4')).toBe(false);

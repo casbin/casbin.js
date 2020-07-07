@@ -9,33 +9,38 @@ export default class Permission {
         this.objActData = new Map<string, Array<string>>();
     }
     
-    /*
-        Load the Permission from a JSON string
-    */
-    public loadFromString(s : string) : void {
-        const jsonObj = JSON.parse(s);
-        
+
+    public load(permission : string | object) : void {
+        let p : StringKV;
+        if (typeof(permission) == 'string') {
+            p = JSON.parse(permission) as StringKV;
+        } else {
+            p = permission as StringKV;
+        }
+
         // Generate data: {key:Actions, value: Array of objects}
-        for (const act in jsonObj) {
-            this.actObjData.set(act, jsonObj[act] as Array<string>);
+        for (const act in p) {
+            this.actObjData.set(act, p[act] as Array<string>);
         }
 
         // Generate data: {key:Objects, value: Array of actions}
         const tmp : StringKV = {};
-        for (const act in jsonObj) {
-            if (!(jsonObj[act] in tmp)) {
-                tmp[jsonObj[act]] = [];
-            } 
-            tmp[jsonObj[act]].push(act);
+        for (const act in p) {
+            for (const obj in p[act]) {
+                if (!(obj in tmp)) {
+                    tmp[obj] = [];
+                }
+                tmp[obj].push(act);
+            }
         }
         for (const obj in tmp) {
             this.objActData.set(obj, tmp[obj] as Array<string>);
         }
-
+        
     }
 
-    public getPermissionJson() : {[key: string]: string[]} {
-        const obj : {[key: string]: string[]} = {};
+    public getPermissionJson() : StringKV {
+        const obj : StringKV = {};
         this.actObjData.forEach((value, key) => (obj[key] = value));
         return obj;
     }

@@ -6,15 +6,22 @@ describe('Permission unit test', () => {
     }
     const permission = new Permission();
 
+    test('Load permission from JSON object', () => {
+        const s = JSON.stringify(policyExample);
+        permission.load(policyExample);
+        const t = permission.getPermissionJson();
+        expect(t).toMatchObject(policyExample);
+    })
+
     test('Load permission from JSON string', () => {
         const s = JSON.stringify(policyExample);
-        permission.loadFromString(s);
+        permission.load(s);
         const t = permission.getPermissionString();
         expect(JSON.parse(t)).toMatchObject(policyExample);
     })
 
     test('Get targets from an action', () => {
-        permission.loadFromString(JSON.stringify(policyExample));
+        permission.load(policyExample);
 
         let expected = policyExample['read'];
         let actual = permission.getTargetsFromAction('read');
