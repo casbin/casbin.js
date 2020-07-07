@@ -1,3 +1,5 @@
+import {StringKV} from './utils';
+
 export default class Permission {
     private actObjData : Map<string, Array<string>>;
     private objActData : Map<string, Array<string>>;
@@ -19,7 +21,7 @@ export default class Permission {
         }
 
         // Generate data: {key:Objects, value: Array of actions}
-        const tmp : {[key:string]: string[]} = {};
+        const tmp : StringKV = {};
         for (const act in jsonObj) {
             if (!(jsonObj[act] in tmp)) {
                 tmp[jsonObj[act]] = [];

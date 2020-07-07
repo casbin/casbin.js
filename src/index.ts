@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Permission from './permission';
+import { StringKV } from './utils';
 
 interface BaseResponse {
     message: string;
@@ -18,7 +19,7 @@ export class Authorizer {
     /**
      * Get the permission.
      */
-    public getPermission() : {[key: string]: string[]} {
+    public getPermission() : StringKV {
         return this.permission.getPermissionJson();
     }
 

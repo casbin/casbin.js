@@ -1,6 +1,7 @@
 import * as http from "http";
 import express from 'express';
 import { newEnforcer, Enforcer } from 'casbin';
+import { StringKV } from '../utils';
 
 class CasbinService {
     private enforcer! : Enforcer;
@@ -13,7 +14,7 @@ class CasbinService {
     
     public async getPermission(sub: string) : Promise<string> {
         const policies = await this.enforcer.getImplicitPermissionsForUser(sub);
-        const permission : { [key:string]: string[] } = {};
+        const permission : StringKV = {};
         policies.forEach(policy => {
             if (!(policy[2] in permission)) {
                 permission[policy[2]] = [];
