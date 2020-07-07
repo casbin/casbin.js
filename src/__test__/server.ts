@@ -12,7 +12,7 @@ class CasbinService {
         this.enforcer = await newEnforcer('./src/__test__/example/rbac_model.conf', './src/__test__/example/rbac_policy.csv');
     }
     
-    public async getPermission(sub: string) : Promise<string> {
+    public async getPermission(sub: string) : Promise<StringKV> {
         const policies = await this.enforcer.getImplicitPermissionsForUser(sub);
         const permission : StringKV = {};
         policies.forEach(policy => {
@@ -21,7 +21,7 @@ class CasbinService {
             }
             permission[policy[2]].push(policy[1]);
         })
-        return JSON.stringify(permission);
+        return permission;
     }
 }
 
