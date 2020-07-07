@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Permission from './permission';
-import { StringKV } from './utils';
+import { StringKV } from './types';
 
 interface BaseResponse {
     message: string;

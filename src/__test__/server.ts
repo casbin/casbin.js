@@ -1,7 +1,7 @@
 import * as http from "http";
 import express from 'express';
 import { newEnforcer, Enforcer } from 'casbin';
-import { StringKV } from '../utils';
+import { StringKV } from '../types';
 
 class CasbinService {
     private enforcer! : Enforcer;

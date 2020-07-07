@@ -1,4 +1,4 @@
-import {StringKV} from './utils';
+import {StringKV} from './types';
 
 export default class Permission {
     private actObjData : Map<string, Array<string>>;
