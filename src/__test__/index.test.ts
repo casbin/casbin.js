@@ -1,8 +1,10 @@
 import axios from 'axios';
+import Cookies from 'js-cookie'
 import { Authorizer } from '../index';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
+
 
 test('Mock functions', async () => {
     const respObj = {
@@ -20,13 +22,12 @@ test('Mock functions', async () => {
     // expect(mockedAxios.get('http://localhost:4000/api/casbin?casbin_subject=alice')).toMatchObject(respObj);
 });
 
-test('Authorizer', () => {
-    const permissionObj = {
-        read: ['data1', 'data2', 'data3'],
-        write: ['data1']
-    }
-    const authorizer = new Authorizer();
-    authorizer.setPermission(permissionObj);
+const permissionObj = {
+    read: ['data1', 'data2', 'data3'],
+    write: ['data1']
+}
+
+function check(authorizer: Authorizer) {
     // can
     expect(authorizer.can('read', 'data1')).toBe(true);
     expect(authorizer.can('read', 'data4')).toBe(false);
@@ -43,4 +44,21 @@ test('Authorizer', () => {
     expect(authorizer.canAny('write', ['data1', 'data2'])).toBe(true);
     expect(authorizer.canAny('read', ['data1', 'data2', 'data4'])).toBe(true);
     expect(authorizer.canAny('read', ['data4'])).toBe(false);
+}
+
+test('Cookies mode', () => {
+    const permissionObj = {
+        read: ['data1', 'data2', 'data3'],
+        write: ['data1']
+    }
+    const cookieKey = 'test_perm'
+    Cookies.set('test_perm', JSON.stringify(permissionObj));
+    const authorizer = new Authorizer('cookies', {cookieKey: cookieKey});
+    check(authorizer);
+})
+
+test('Manual mode', () => {
+    const authorizer = new Authorizer('manual');
+    authorizer.setPermission(permissionObj);
+    check(authorizer);
 })

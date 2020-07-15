@@ -38,6 +38,8 @@
     "webpack-merge": "^5.0.8"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "@types/js-cookie": "^2.2.6",
+    "axios": "^0.19.2",
+    "js-cookie": "^2.2.1"
   }
 }
