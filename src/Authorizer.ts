@@ -26,18 +26,17 @@ export class Authorizer {
      * @param args.endpoint Casbin service endpoint, required when mode == "auto"
      * @param args.cookieKey The cookie key when loading permission, activated when mode == "cookies"
      */
-    constructor(mode: Mode, args: {endpoint?: string, cookieKey?: string} = {}) {
+    constructor(mode: Mode = "manual", args: {endpoint?: string, cookieKey?: string} = {}) {
         if (mode == 'auto') {
             if (!args.endpoint) {
                 throw new Error("Specify the endpoint when initializing casbin.js with mode == 'auto'");
-                return;
             } else {
                 this.mode = mode;
                 this.endpoint = args.endpoint;
             }
         } else if (mode == 'cookies') {
             this.mode = mode;
-            let permission = Cookies.get(args.cookieKey ? args.cookieKey : "casbin_perm");
+            const permission = Cookies.get(args.cookieKey ? args.cookieKey : "casbin_perm");
             if (permission) {
                 this.setPermission(permission);
             } else {
@@ -65,7 +64,7 @@ export class Authorizer {
      * Get the authority of a given user from Casbin core
      */
     private async syncUserPermission(): Promise<void> {
-        if (this.endpoint !== undefined) {
+        if (this.endpoint !== undefined && this.endpoint !== null) {
             const resp = await axios.get<BaseResponse>(`${this.endpoint}?casbin_subject=${this.user}`);
             this.permission.load(resp.data.data);
             console.log("syncUserPermission is called")
