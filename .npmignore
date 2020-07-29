@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# Src and test suites
+src/
+
+# Other extensions
+extensions/
+
+.idea/
+package-lock.json
+yarn.lock
+ 
+# webpack configurations
+webpack.*
+
+npm-debug.log

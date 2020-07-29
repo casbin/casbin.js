@@ -1,4 +1,5 @@
-import Permission from '../permission';
+import Permission from '../Permission';
+
 describe('Permission unit test', () => {
     const policyExample = {
         'read': ['data1', 'data2'],
