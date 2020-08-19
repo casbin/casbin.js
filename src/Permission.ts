@@ -8,7 +8,6 @@ export default class Permission {
         this.actObjData = new Map<string, Array<string>>();
         this.objActData = new Map<string, Array<string>>();
     }
-    
 
     public load(permission : string | Record<string, unknown>) : void {
         let p : StringKV;
@@ -39,7 +38,7 @@ export default class Permission {
         
     }
 
-    public getPermissionJson() : StringKV {
+    public getPermissionJsonObject() : StringKV {
         const obj : StringKV = {};
         this.actObjData.forEach((value, key) => (obj[key] = value));
         return obj;
@@ -49,7 +48,7 @@ export default class Permission {
         Parse the permission into JSON string
     */
     public getPermissionString() : string {
-        return JSON.stringify(this.getPermissionJson());
+        return JSON.stringify(this.getPermissionJsonObject());
     }
 
     public getTargetsFromAction(action: string) : Array<string> {
