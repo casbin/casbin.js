@@ -10,7 +10,7 @@ describe('Permission unit test', () => {
     test('Load permission from JSON object', () => {
         const s = JSON.stringify(policyExample);
         permission.load(policyExample);
-        const t = permission.getPermissionJson();
+        const t = permission.getPermissionJsonObject();
         expect(t).toMatchObject(policyExample);
     })
 
