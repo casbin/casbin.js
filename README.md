@@ -4,7 +4,7 @@ Casbin.js is a frontend port of a backend Casbin service, which facilitates the 
 
 ## Example
 
-We demostrate the usage of Casbin.js with [a React app](./example/react). View the code to see more details.
+We demostrate the usage of Casbin.js with [a React app](https://github.com/casbin-js/examples/tree/master/react). View the code to see more details.
 
 
 You can use `manual` mode in Casbin.js, and set the permission whenever you wish.
@@ -44,7 +44,9 @@ authorizer.can("read", "data1");
 More functionalities of Casbin.js are still under development. Feel free to raise issues to share your features suggestions!
 
 ## TODO MAP
-- [ ] Permission cache.
+- [x] Permission cache.
+- [ ] Cookie mode.
+- [ ] Lightweight enforcer (avoid the abuse of async functions).
 - [ ] Integration with other modern frontend frameworks.
 
 

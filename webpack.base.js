@@ -12,11 +12,28 @@ module.exports = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.jsx?$/,
+        include: [
+          path.resolve(__dirname, "node_modules/casbin/lib/esm"),
+        ],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-proposal-optional-chaining']
+          },
+        },
+      }
     ],
   },
   resolve: {
     extensions: [ '.tsx', '.ts', '.js' ],
   },
+  node: {
+    fs: "empty"
+  },
+
   output: {
     library: 'casbin',
     libraryTarget: 'umd',
@@ -24,6 +41,6 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
   },
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin()
   ]
 };
