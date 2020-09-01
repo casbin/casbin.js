@@ -19,7 +19,6 @@ export function saveToLocalStorage(key: string, value: string, expired: number):
         value: value,
         expired: Date.now() + 1000 * expired
     };
-    console.log(savedItem);
     try {
         localStorage.setItem(`casbinjs_${key}`, JSON.stringify(savedItem));
     } catch (e) {
@@ -30,7 +29,7 @@ export function saveToLocalStorage(key: string, value: string, expired: number):
 }
 
 /***
- * return: a string. 
+ * return: a string.
  * If ret == null, it means there is no such user permission.
  */
 export function loadFromLocalStorage(key: string): string | null{
@@ -50,4 +49,8 @@ export function loadFromLocalStorage(key: string): string | null{
     } else {
         return item['value'];
     }
+}
+
+export function removeLocalStorage(key: string) {
+    localStorage.removeItem(`casbinjs_${key}`);
 }
