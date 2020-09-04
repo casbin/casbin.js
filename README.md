@@ -1,5 +1,10 @@
 # Casbin.js
 
+[![NPM version](https://img.shields.io/npm/v/casbin.js)](https://www.npmjs.com/package/casbin.js)
+[![Build Status](https://api.travis-ci.com/casbin/casbin.js.svg?branch=master)](https://travis-ci.com/github/casbin/casbin.js)
+[![codebeat badge](https://codebeat.co/badges/74b3febb-292f-4633-81df-3a76ea445cd8)](https://codebeat.co/projects/github-com-casbin-casbin-js-master)
+![Code size](https://img.shields.io/github/languages/code-size/casbin/casbin.js)
+
 Casbin.js is a frontend port of a backend Casbin service, which facilitates the manipulation, management and storage of the user permission in a frontend application.
 
 ## Example
