@@ -61,8 +61,8 @@ class TestServer {
                 data: 'this is the data'
             })
         });
-        this.app.get('/api/casbin', async (req: express.Request, res: express.Response) => {
-            const sub = String(req.query["casbin_subject"]);
+        this.app.get('/api/permissions', async (req: express.Request, res: express.Response) => {
+            const sub = String(req.query["subject"]);
             const config = await this.casbinServ.getEnforcerConfig(sub);
             res.status(200).json({
                 message: 'ok',

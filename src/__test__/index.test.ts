@@ -22,7 +22,7 @@ test('Mock functions', () => {
     // authorizer.setUser('alice');
     // expect(authorizer.getPermission()).toMatchObject(respObj);
 
-    // expect(mockedAxios.get('http://localhost:4000/api/casbin?casbin_subject=alice')).toMatchObject(respObj);
+    // expect(mockedAxios.get('http://localhost:4000/api/permissions?subject=alice')).toMatchObject(respObj);
 });
 
 async function check(authorizer: Authorizer) {
@@ -86,9 +86,9 @@ describe('Auto mode with server', () => {
         await server.start();
     });
 
-    test('Request for /api/casbin', async () => {
+    test('Request for /api/permissions', async () => {
         removeLocalStorage('alice');
-        const authorizer = new Authorizer('auto', { endpoint: 'http://localhost:4000/api/casbin'});
+        const authorizer = new Authorizer('auto', { endpoint: 'http://localhost:4000/api/permissions'});
         await authorizer.setUser('alice');
         await check(authorizer);
     });

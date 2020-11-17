@@ -25,7 +25,7 @@ export class Authorizer {
      *
      * @param mode "auto", "cookies" or "manual"
      * "auto": Specify the casbin server endpoint, and Casbin.js will load permission from it when the identity changes
-     * "cookies": Casbin.js load the permission data from the cookie "casbin_permission" or the specified cookie key.
+     * "cookies": Casbin.js load the permission data from the cookie "access_perm" or the specified cookie key.
      * "manual": Load the permission mannually with "setPermission"
      * @param args.endpoint Casbin service endpoint, REQUIRED when mode == "auto"
      * @param args.cacheExpiredTime The expired time of local cache, Unit: seconds, Default: 60s, activated when mode == "auto"
@@ -46,7 +46,7 @@ export class Authorizer {
             throw Error("Cookie mode not implemented.");
             /*
             this.mode = mode;
-            const permission = Cookies.get(args.cookieKey ? args.cookieKey : "casbin_perm");
+            const permission = Cookies.get(args.cookieKey ? args.cookieKey : "access_perm");
             if (permission) {
                 this.setPermission(permission);
             } else {
@@ -100,7 +100,7 @@ export class Authorizer {
         if (this.endpoint === undefined || this.endpoint === null) {
             throw Error("Endpoint is null or not specified.");
         }
-        const resp = await axios.get<BaseResponse>(`${this.endpoint}?casbin_subject=${this.user}`);
+        const resp = await axios.get<BaseResponse>(`${this.endpoint}?subject=${this.user}`);
         return resp.data.data;
     }
 
