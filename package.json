@@ -43,7 +43,7 @@
     "@babel/core": "^7.11.4",
     "@babel/preset-env": "^7.11.0",
     "axios": "^0.21.1",
-    "babel-loader": "^8.1.0",
+    "babel-loader": ">=8.1.0",
     "js-cookie": "^2.2.1"
   }
 }
