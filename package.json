@@ -23,6 +23,7 @@
     "@typescript-eslint/parser": "^3.2.0",
     "casbin": "^5.1.2",
     "clean-webpack-plugin": "^3.0.0",
+    "cz-conventional-changelog": "^3.3.0",
     "eslint": "^7.7.0",
     "eslint-config-prettier": "^6.11.0",
     "express": "^4.17.1",
@@ -45,5 +46,10 @@
     "axios": "^0.21.1",
     "babel-loader": "^8.1.0",
     "js-cookie": "^2.2.1"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
