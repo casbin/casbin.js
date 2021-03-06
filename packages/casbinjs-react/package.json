@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "@types/hoist-non-react-statics": "^3.3.1",
-    "hoist-non-react-statics": "^3.3.2"
+    "casbin": "^5.4.2",
+    "hoist-non-react-statics": "^3.3.2",
+    "synchronized-promise": "^0.3.1"
   }
 }
