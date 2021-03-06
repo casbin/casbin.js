@@ -1,9 +1,12 @@
 const isLocalStorageAvailable: boolean = (() => {
+    if (!window.localStorage) {
+        return false
+    }
     try {
         const key = "fUjXn2r59"; // A random key
         const value = "test";
         localStorage.setItem(key, value);
-        const gotValue = localStorage.getItem(key);
+        localStorage.getItem(key);
         localStorage.removeItem(key);
         return true;
     } catch (e) {
