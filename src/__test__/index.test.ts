@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Cookies from 'js-cookie'
 import { Authorizer } from '../index';
 import { basicModelStr } from './models';
 import { basicPolicies } from './policies';
