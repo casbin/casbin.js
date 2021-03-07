@@ -8,11 +8,11 @@ function getDisplayName(Component: React.ComponentType<any>): string {
     return Component.displayName || Component.name || 'Component';
 }
 
-export function injectCasbin(WrappedComponent: React.ComponentType) {
+export function injectCasbin(WrappedComponent: React.ComponentType<any>) {
     const RenderComponents: React.FC = (props) => (
         <Consumer>
-            {(enforce): React.ReactNode => {
-                return; //TODO;
+            {(enforcer): React.ReactNode => {
+                return <WrappedComponent {...props} enforcer={enforcer} />;
             }}
         </Consumer>
     );
