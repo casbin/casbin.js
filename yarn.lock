@@ -2230,12 +2230,13 @@ capture-exit@^2.0.0:
   dependencies:
     rsvp "^4.8.4"
 
-casbin@^5.1.2:
-  version "5.2.2"
-  resolved "https://registry.npm.taobao.org/casbin/download/casbin-5.2.2.tgz#ed97287aed117766e16e20988aa1ad04508b14c2"
-  integrity sha1-7Zcoeu0Rd2bhbiCYiqGtBFCLFMI=
+casbin@^5.4.2:
+  version "5.4.2"
+  resolved "https://registry.npm.taobao.org/casbin/download/casbin-5.4.2.tgz#085aef5ada902f6cbf5a3bb929bc2598de47ec99"
+  integrity sha1-CFrvWtqQL2y/Wju5KbwlmN5H7Jk=
   dependencies:
     await-lock "^2.0.1"
+    csv-parse "^4.15.3"
     expression-eval "^2.0.0"
     ip "^1.1.5"
     micromatch "^4.0.2"
@@ -2673,6 +2674,11 @@ cssstyle@^2.2.0:
   integrity sha1-/2ZaDdvcMYZLCWR/NBY0Q9kLCFI=
   dependencies:
     cssom "~0.3.6"
+
+csv-parse@^4.15.3:
+  version "4.15.3"
+  resolved "https://registry.npm.taobao.org/csv-parse/download/csv-parse-4.15.3.tgz#8a62759617a920c328cb31c351b05053b8f92b10"
+  integrity sha1-imJ1lhepIMMoyzHDUbBQU7j5KxA=
 
 cyclist@^1.0.1:
   version "1.0.1"
