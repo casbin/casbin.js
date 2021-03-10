@@ -28,8 +28,13 @@ const permission = {
 const authorizer = new casbinjs.Authorizer("manual");
 
 authorizer.setPermission(permission);
-console.log(authorizer.can("read", "data1"));
-console.log(authorizer.cannot("write", "data2"));
+
+authorizer.can("read", "data1").then(result => {
+  console.log(result)
+})
+authorizer.cannot("write", "data2").then(result => {
+  console.log(result)
+});
 ```
 
 You can also use the `auto` mode. In details, specify an casbin backend service endpoint when initialize the Casbin.js authorizer, and set the subject when the frontend user identity changes. Casbin.js will automatically fetch the permission from the endpoint. (A pre-configurated casbin service API is required at the backend.)
@@ -43,7 +48,7 @@ const authorizer = new casbinjs.Authorizer('auto', {endpoint: 'http://Domain_nam
 authorizer.setUser("Tom");
 
 // Evaluate the permission
-authorizer.can("read", "data1");
+authorizer.can("read", "data1").then();
 ```
 
 More functionalities of Casbin.js are still under development. Feel free to raise issues to share your features suggestions!
