@@ -11,6 +11,9 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2.1.5
 
+      - name: Install Dependency
+        run: yarn install
+
       - name: Run Lint
         run: yarn run lint
 
@@ -27,7 +30,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2.1.5
         with:
-          go-version: ${{ matrix.node }}
+          node-version: ${{ matrix.node }}
+
+      - name: Install Dependency
+        run: yarn install
 
       - name: Run Unit test
         run: yarn run test
