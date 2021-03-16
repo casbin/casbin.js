@@ -12,7 +12,11 @@
     "build": "rimraf lib && tsc",
     "test": "jest --config jestconfig.json --unhandled-rejections=strict",
     "prod": "webpack --config webpack.prod.js",
-    "dev": "webpack --config webpack.dev.js"
+    "dev": "webpack --config webpack.dev.js",
+    "clean": "rimraf lib",
+    "prepack": "run-s build",
+    "postpack": "run-s clean",
+    "release": "npx -p semantic-release -p @semantic-release/git -p @semantic-release/changelog -y semantic-release"
   },
   "devDependencies": {
     "@babel/plugin-proposal-optional-chaining": "^7.11.0",
