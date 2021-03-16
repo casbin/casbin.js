@@ -5,7 +5,7 @@
   "types": "./lib/index.d.ts",
   "repository": "https://github.com/casbin/casbin.js.git",
   "author": "kingiw <kingiw@hotmail.com>",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "format": "prettier --write 'src/**/*.ts'",
     "lint": "yarn eslint . --ext .js,.jsx,.ts,.tsx --fix",
