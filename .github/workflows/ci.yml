@@ -1,0 +1,33 @@
+name: Continuous integration
+
+on: [ push, pull_request ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2.1.5
+
+      - name: Run Lint
+        run: yarn run lint
+
+
+  test:
+    needs: [ lint ]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [ 1.12, 1.13, 1.14, 1.15 ]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2.1.5
+        with:
+          go-version: ${{ matrix.node }}
+
+      - name: Run Unit test
+        run: yarn run test
