@@ -37,3 +37,19 @@ jobs:
 
       - name: Run Unit test
         run: yarn run test
+
+  semantic-release:
+    needs: [ test ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run semantic-release
+        if: github.repository == 'casbin/casbin.js' && github.event_name == 'push'
+        run: |
+          yarn install --no-lockfile
+          yarn run prepack
+          yarn run release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
