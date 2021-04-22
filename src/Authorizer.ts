@@ -15,6 +15,7 @@ type Mode = "auto" | "cookies" | "manual"
 export class Authorizer {
     public mode!: Mode;
     public endpoint: string | undefined = undefined;
+    public requestHeaders: StringKV | undefined = undefined;
     public permission: Permission | undefined;
     public cookieKey : string | undefined = undefined;
     public cacheExpiredTime  = 60; // Seconds
@@ -27,17 +28,21 @@ export class Authorizer {
      * "auto": Specify the casbin server endpoint, and Casbin.js will load permission from it when the identity changes
      * "cookies": Casbin.js load the permission data from the cookie "access_perm" or the specified cookie key.
      * "manual": Load the permission mannually with "setPermission"
+     * @param args
      * @param args.endpoint Casbin service endpoint, REQUIRED when mode == "auto"
      * @param args.cacheExpiredTime The expired time of local cache, Unit: seconds, Default: 60s, activated when mode == "auto"
      * @param args.cookieKey The cookie key when loading permission, activated when mode == "cookies"
      */
-    constructor(mode: Mode = "manual", args: {endpoint?: string, /*cookieKey?: string,*/ cacheExpiredTime?: number} = {}) {
+    constructor(mode: Mode = 'manual', args: { endpoint?: string; cacheExpiredTime?: number; requestHeaders?: StringKV } = {}) {
         if (mode == 'auto') {
             if (!args.endpoint) {
                 throw new Error("Specify the endpoint when initializing casbin.js with mode == 'auto'");
             } else {
                 this.mode = mode;
                 this.endpoint = args.endpoint;
+                if (args.requestHeaders) {
+                    this.requestHeaders = args.requestHeaders;
+                }
                 if (args.cacheExpiredTime !== null && args.cacheExpiredTime !== undefined) {
                     this.cacheExpiredTime = args.cacheExpiredTime;
                 }
@@ -100,7 +105,9 @@ export class Authorizer {
         if (this.endpoint === undefined || this.endpoint === null) {
             throw Error("Endpoint is null or not specified.");
         }
-        const resp = await axios.get<BaseResponse>(`${this.endpoint}?subject=${this.user}`);
+        const resp = await axios.get<BaseResponse>(`${this.endpoint}?subject=${this.user}`, {
+            headers: this.requestHeaders,
+        });
         return resp.data.data;
     }
 
