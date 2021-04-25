@@ -45,7 +45,7 @@ const casbinjs = require('casbin.js');
 const authorizer = new casbinjs.Authorizer('auto', {endpoint: 'http://Domain_name/casbin/api'});
 
 // When the identity shifts, reset the user. Casbin.js will automatically fetch the permission from the endpoint.
-authorizer.setUser("Tom");
+await authorizer.setUser("Tom");
 
 // Evaluate the permission
 authorizer.can("read", "data1").then();
