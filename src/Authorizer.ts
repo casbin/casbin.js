@@ -83,7 +83,7 @@ export class Authorizer {
         }
         this.permission.load(permission);
     }
-    
+
     public async initEnforcer(s: string): Promise<void> {
         const obj = JSON.parse(s);
         if (!('m' in obj)) {
@@ -107,6 +107,7 @@ export class Authorizer {
         }
         const resp = await axios.get<BaseResponse>(`${this.endpoint}?subject=${this.user}`, {
             headers: this.requestHeaders,
+            transformResponse: res => res,
         });
         return resp.data.data;
     }
