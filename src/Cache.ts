@@ -1,4 +1,8 @@
 const isLocalStorageAvailable: boolean = (() => {
+    if (!window) {
+        // in case casbin.js is used in an ssr scenario
+        return false
+    }
     if (!window.localStorage) {
         return false
     }
