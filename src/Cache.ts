@@ -1,5 +1,5 @@
 const isLocalStorageAvailable: boolean = (() => {
-    if (!window.localStorage) {
+    if (typeof window === 'undefined' || !window.localStorage) {
         return false
     }
     try {
