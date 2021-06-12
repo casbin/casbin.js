@@ -41,7 +41,7 @@
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^5.0.8"
+    "webpack-merge": "^5.8.0"
   },
   "dependencies": {
     "@babel/core": "^7.11.4",
