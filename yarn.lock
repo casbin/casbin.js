@@ -7924,10 +7924,10 @@ webpack-log@^2.0.0:
     ansi-colors "^3.0.0"
     uuid "^3.3.2"
 
-webpack-merge@^5.0.8:
-  version "5.7.0"
-  resolved "https://registry.npm.taobao.org/webpack-merge/download/webpack-merge-5.7.0.tgz?cache=0&sync_timestamp=1607819743407&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fwebpack-merge%2Fdownload%2Fwebpack-merge-5.7.0.tgz#004dec31f7a875e590c9731e5bdcd3efad0f2715"
-  integrity sha1-AE3sMfeodeWQyXMeW9zT760PJxU=
+webpack-merge@^5.8.0:
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/webpack-merge/-/webpack-merge-5.8.0.tgz#2b39dbf22af87776ad744c390223731d30a68f61"
+  integrity sha512-/SaI7xY0831XwP6kzuwhKWVKDP9t1QY1h65lAFLbZqMPIuYcD9QAW4u9STIbU9kaJbPBB/geU/gLr1wDjOhQ+Q==
   dependencies:
     clone-deep "^4.0.1"
     wildcard "^2.0.0"
