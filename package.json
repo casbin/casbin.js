@@ -38,7 +38,7 @@
     "ts-loader": "^8.0.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.9.6",
-    "webpack": "^4.43.0",
+    "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^5.0.8"
