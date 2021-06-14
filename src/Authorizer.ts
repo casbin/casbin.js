@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Cookies from 'js-cookie';
 import * as casbin from 'casbin';
 import Permission from './Permission';
 import { StringKV } from './types';
@@ -83,7 +82,7 @@ export class Authorizer {
         }
         this.permission.load(permission);
     }
-    
+
     public async initEnforcer(s: string): Promise<void> {
         const obj = JSON.parse(s);
         if (!('m' in obj)) {
@@ -93,7 +92,14 @@ export class Authorizer {
         this.enforcer = await casbin.newEnforcer(m);
         if ('p' in obj) {
             for (const sArray of obj['p']) {
-                await this.enforcer.addPolicy(sArray[1].trim(), sArray[2].trim(), sArray[3].trim());
+                let arr = sArray as string[];
+                arr = arr.map(v => v.trim())
+                const pType = arr.shift()
+                if (pType == 'p'){
+                    await this.enforcer.addPolicy(...arr);
+                } else if (pType == 'g'){
+                    await this.enforcer.addGroupingPolicy(...arr);
+                }
             }
         }
     }
@@ -127,36 +133,38 @@ export class Authorizer {
         }
     }
 
-    public async can(action: string, object: string): Promise<boolean> {
+    public async can(action: string, object: string, domain?: string): Promise<boolean> {
         if (this.mode == "manual") {
             return this.permission !== undefined && this.permission.check(action, object);
         } else if (this.mode == "auto") {
             if (this.enforcer === undefined) {
                 throw Error("Enforcer not initialized");
-            } else {
+            } else if (domain == undefined) {
                 return await this.enforcer.enforce(this.user, object, action);
+            } else {
+                return await this.enforcer.enforce(this.user, domain, object, action);
             }
         } else {
             throw Error(`Mode ${this.mode} not recognized.`);
         }
     }
 
-    public async cannot(action: string, object: string): Promise<boolean> {
-        return !(await this.can(action, object));
+    public async cannot(action: string, object: string, domain?: string): Promise<boolean> {
+        return !(await this.can(action, object, domain));
     }
 
-    public async canAll(action: string, objects: string[]) : Promise<boolean> {
+    public async canAll(action: string, objects: string[], domain?: string) : Promise<boolean> {
         for (let i = 0; i < objects.length; ++i) {
-            if (await this.cannot(action, objects[i])) {
+            if (await this.cannot(action, objects[i], domain)) {
                 return false;
             }
         }
         return true;
     }
 
-    public async canAny(action: string, objects: string[]) : Promise<boolean> {
+    public async canAny(action: string, objects: string[], domain?: string) : Promise<boolean> {
         for (let i = 0; i < objects.length; ++i) {
-            if (await this.can(action, objects[i])) {
+            if (await this.can(action, objects[i], domain)) {
                 return true;
             }
         }

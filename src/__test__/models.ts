@@ -8,3 +8,6 @@ export const rbacModelStr = readFileSync(rbacExample).toString();
 
 const abacWithObjRuleExample = 'src/__test__/examples/abac_with_obj_rule_policy.csv';
 export const abacWithObjRuleModelStr = readFileSync(abacWithObjRuleExample).toString();
+
+const rbacWithDomainsExample = 'src/__test__/examples/rbac_with_domains_model.conf';
+export const rbacWithDomainsModelStr= readFileSync(rbacWithDomainsExample).toString();
