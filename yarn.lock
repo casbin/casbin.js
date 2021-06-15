@@ -2386,16 +2386,15 @@ capture-exit@^2.0.0:
   dependencies:
     rsvp "^4.8.4"
 
-casbin@^5.4.2:
-  version "5.4.2"
-  resolved "https://registry.npm.taobao.org/casbin/download/casbin-5.4.2.tgz#085aef5ada902f6cbf5a3bb929bc2598de47ec99"
-  integrity sha1-CFrvWtqQL2y/Wju5KbwlmN5H7Jk=
+casbin@^5.8.0:
+  version "5.8.0"
+  resolved "https://registry.yarnpkg.com/casbin/-/casbin-5.8.0.tgz#6dc311ab0603aa79f880a43f34bf31203579bdab"
+  integrity sha512-o8hCt0zCbbtFHEpBFwj/cnDkoeKWJjoGh+UCg2AJ3f6zB+xP9NEC8iYhgy8lqYYIH6QtJyWcWOYQQHWTFxH0qA==
   dependencies:
     await-lock "^2.0.1"
     csv-parse "^4.15.3"
-    expression-eval "^2.0.0"
-    ip "^1.1.5"
-    micromatch "^4.0.2"
+    expression-eval "^4.0.0"
+    picomatch "^2.2.3"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -3605,10 +3604,10 @@ express@^4.17.1:
     utils-merge "1.0.1"
     vary "~1.1.2"
 
-expression-eval@^2.0.0:
-  version "2.1.0"
-  resolved "https://registry.npm.taobao.org/expression-eval/download/expression-eval-2.1.0.tgz#422915caa46140a7c5b5f248650dea8bf8236e62"
-  integrity sha1-QikVyqRhQKfFtfJIZQ3qi/gjbmI=
+expression-eval@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/expression-eval/-/expression-eval-4.0.0.tgz#d6a07c93e8b33e635710419d4a595d9208b9cc5e"
+  integrity sha512-YHSnLTyIb9IKaho2IdQbvlei/pElxnGm48UgaXJ1Fe5au95Ck0R9ftm6rHJQuKw3FguZZ4eXVllJFFFc7LX0WQ==
   dependencies:
     jsep "^0.3.0"
 
@@ -6228,10 +6227,10 @@ performance-now@^2.1.0:
   resolved "https://registry.npm.taobao.org/performance-now/download/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.2.1:
-  version "2.2.2"
-  resolved "https://registry.npm.taobao.org/picomatch/download/picomatch-2.2.2.tgz#21f333e9b6b8eaff02468f5146ea406d345f4dad"
-  integrity sha1-IfMz6ba46v8CRo9RRupAbTRfTa0=
+picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.2.1, picomatch@^2.2.3:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.0.tgz#f1f061de8f6a4bf022892e2d128234fb98302972"
+  integrity sha512-lY1Q/PiJGC2zOv/z391WOTD+Z02bCgsFfvxoXXf6h7kv9o+WmsmzYqrAwY63sNgOxE4xEdq0WyUnXfKeBrSvYw==
 
 pidtree@^0.3.0:
   version "0.3.1"
