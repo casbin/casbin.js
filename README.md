@@ -1,12 +1,12 @@
-# Node-Casbin
+# casbin.js
 
 [![NPM version][npm-image]][npm-url]
 [![NPM download][download-image]][download-url]
 [![install size](https://packagephobia.now.sh/badge?p=casbin)](https://packagephobia.now.sh/result?p=casbin)
-[![codebeat badge](https://codebeat.co/badges/c17c9ee1-da42-4db3-8047-9574ad2b23b1)](https://codebeat.co/projects/github-com-casbin-node-casbin-master)
-[![GitHub Actions](https://github.com/casbin/node-casbin/workflows/main/badge.svg)](https://github.com/casbin/node-casbin/actions)
-[![Coverage Status](https://coveralls.io/repos/github/casbin/node-casbin/badge.svg?branch=master)](https://coveralls.io/github/casbin/node-casbin?branch=master)
-[![Release](https://img.shields.io/github/release/casbin/node-casbin.svg)](https://github.com/casbin/node-casbin/releases/latest)
+[![codebeat badge](https://codebeat.co/badges/c17c9ee1-da42-4db3-8047-9574ad2b23b1)](https://codebeat.co/projects/github-com-casbin-casbin.js-master)
+[![GitHub Actions](https://github.com/casbin/casbin.js/workflows/main/badge.svg)](https://github.com/casbin/casbin.js/actions)
+[![Coverage Status](https://coveralls.io/repos/github/casbin/casbin.js/badge.svg?branch=master)](https://coveralls.io/github/casbin/casbin.js?branch=master)
+[![Release](https://img.shields.io/github/release/casbin/casbin.js.svg)](https://github.com/casbin/casbin.js/releases/latest)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
 
 [npm-image]: https://img.shields.io/npm/v/casbin.svg?style=flat-square
@@ -14,11 +14,11 @@
 [download-image]: https://img.shields.io/npm/dm/casbin.svg?style=flat-square
 [download-url]: https://npmjs.org/package/casbin
 
-**News**: still worry about how to write the correct `node-casbin` policy? [Casbin online editor](http://casbin.org/en/editor) is coming to help!
+**News**: still worry about how to write the correct `casbin.js` policy? [Casbin online editor](http://casbin.org/en/editor) is coming to help!
 
 ![casbin Logo](casbin-logo.png)
 
-`node-casbin` is a powerful and efficient open-source access control library for Node.JS projects. It provides support for enforcing authorization based on various [access control models](https://en.wikipedia.org/wiki/Computer_security_model).
+`casbin.js` is a powerful and efficient open-source access control library for Node.JS projects. It provides support for enforcing authorization based on various [access control models](https://en.wikipedia.org/wiki/Computer_security_model).
 
 ## All the languages supported by Casbin:
 
@@ -48,7 +48,7 @@ yarn add casbin
 
 ## Get started
 
-New a `node-casbin` enforcer with a model file and a policy file, see [Model](#official-model) section for details:
+New a `casbin.js` enforcer with a model file and a policy file, see [Model](#official-model) section for details:
 
 ```node.js
 // For Node.js:
@@ -80,7 +80,7 @@ if (res) {
 }
 ```
 
-Besides the static policy file, `node-casbin` also provides API for permission management at run-time.
+Besides the static policy file, `casbin.js` also provides API for permission management at run-time.
 For example, You can get all the roles assigned to a user as below:
 
 ```node.js
@@ -115,7 +115,7 @@ https://casbin.org/docs/en/role-managers
 ## Contributors
 
 This project exists thanks to all the people who contribute.
-<a href="https://github.com/casbin/node-casbin/graphs/contributors"><img src="https://opencollective.com/node-casbin/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/casbin/casbin.js/graphs/contributors"><img src="https://opencollective.com/casbin.js/contributors.svg?width=890&button=false" /></a>
 
 ## Backers
 
@@ -146,6 +146,5 @@ This project is licensed under the [Apache 2.0 license](LICENSE).
 
 If you have any issues or feature requests, please contact us. PR is welcomed.
 
-- https://github.com/casbin/node-casbin/issues
-- hsluoyz@gmail.com
+- https://github.com/casbin/casbin.js/issues
 - Tencent QQ group: [546057381](//shang.qq.com/wpa/qunwpa?idkey=8ac8b91fc97ace3d383d0035f7aa06f7d670fd8e8d4837347354a31c18fac885)
