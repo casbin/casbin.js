@@ -24,18 +24,18 @@ jobs:
           flag-name: run-${{ matrix.node-version }}
           parallel: true
 
-  semantic-release:
-    needs: [test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Run semantic-release
-        if: github.repository == 'casbin/node-casbin' && github.event_name == 'push'
-        run: yarn install --no-lockfile && yarn semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  #  semantic-release:
+  #    needs: [test]
+  #    runs-on: ubuntu-latest
+  #    steps:
+  #      - uses: actions/checkout@v2
+  #
+  #      - name: Run semantic-release
+  #        if: github.repository == 'casbin/node-casbin' && github.event_name == 'push'
+  #        run: yarn install --no-lockfile && yarn semantic-release
+  #        env:
+  #          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   finish:
     needs: test

@@ -9,16 +9,16 @@
 [![Release](https://img.shields.io/github/release/casbin/casbin.js.svg)](https://github.com/casbin/casbin.js/releases/latest)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/casbin/lobby)
 
-[npm-image]: https://img.shields.io/npm/v/casbin.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/casbin
-[download-image]: https://img.shields.io/npm/dm/casbin.svg?style=flat-square
-[download-url]: https://npmjs.org/package/casbin
+[npm-image]: https://img.shields.io/npm/v/casbin.js.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/casbin.js
+[download-image]: https://img.shields.io/npm/dm/casbin.js.svg?style=flat-square
+[download-url]: https://npmjs.org/package/casbin.js
 
 **News**: still worry about how to write the correct `casbin.js` policy? [Casbin online editor](http://casbin.org/en/editor) is coming to help!
 
 ![casbin Logo](casbin-logo.png)
 
-`casbin.js` is a powerful and efficient open-source access control library for Node.JS projects. It provides support for enforcing authorization based on various [access control models](https://en.wikipedia.org/wiki/Computer_security_model).
+`casbin.js` is a powerful and efficient open-source access control library for TypeScript/JavaScript projects. It provides support for enforcing authorization based on various [access control models](https://en.wikipedia.org/wiki/Computer_security_model).
 
 ## All the languages supported by Casbin:
 
