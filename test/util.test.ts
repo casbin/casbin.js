@@ -155,3 +155,18 @@ test('test getEvalValue', () => {
   expect(util.arrayEquals(util.getEvalValue('eval(a) && eval(b) && a && b && c'), ['a', 'b']));
   expect(util.arrayEquals(util.getEvalValue('a && eval(a) && eval(b) && b && c'), ['a', 'b']));
 });
+
+test('test policyStringToArray', () => {
+  expect(util.policyStringToArray('p,alice,data1,read')).toEqual([['p', 'alice', 'data1', 'read']]);
+  expect(util.policyStringToArray(`"p","alice","data1","read"`)).toEqual([['p', 'alice', 'data1', 'read']]);
+  expect(util.policyStringToArray(`"p"," alice","data1 ","read"`)).toEqual([['p', ' alice', 'data1 ', 'read']]);
+  expect(util.policyStringToArray(`p,alice,data1,read\np,bob,data1,write`)).toEqual([
+    ['p', 'alice', 'data1', 'read'],
+    ['p', 'bob', 'data1', 'write'],
+  ]);
+});
+
+test('test policyArrayToString', () => {
+  expect(util.policyArrayToString(['p', 'alice', 'data1', 'read'])).toEqual(`"p","alice","data1","read"`);
+  expect(util.policyArrayToString(['p', 'alice ', ' data1', 'read'])).toEqual(`"p","alice "," data1","read"`);
+});
