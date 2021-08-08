@@ -506,3 +506,8 @@ export class SyncedEnforcer extends Enforcer {
 export async function newSyncedEnforcer(...params: any[]): Promise<SyncedEnforcer> {
   return newEnforcerWithClass(SyncedEnforcer, ...params);
 }
+
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+export function isSyncedEnforcer(obj: any): boolean {
+  return obj instanceof SyncedEnforcer;
+}

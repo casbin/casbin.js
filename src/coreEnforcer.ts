@@ -79,7 +79,8 @@ export class CoreEnforcer {
    */
   public loadModel(): void {
     this.model = newModel();
-    this.model.synced = this instanceof SyncedEnforcer;
+    // this.model.synced = this instanceof SyncedEnforcer;
+    this.model.synced = false; // FIXME
     this.model.loadModel(this.modelPath);
     this.model.printModel();
   }
@@ -88,7 +89,8 @@ export class CoreEnforcer {
    * get a new RoleManager based on the type of current Enforcer
    */
   public newRoleManager(): RoleManager | SyncedRoleManager {
-    if (this instanceof SyncedEnforcer) {
+    // if (this instanceof SyncedEnforcer) { // FIXME
+    if (false) {
       return new DefaultSyncedRoleManager(10);
     } else {
       return new DefaultRoleManager(10);
