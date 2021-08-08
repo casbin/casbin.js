@@ -242,7 +242,7 @@ function customFunctionWrapper(...args: any[]): boolean {
 test('TestKeyMatchCustomModel', async () => {
   const e = await getEnforcerWithPath('examples/keymatch_custom_model.conf', 'examples/keymatch2_policy.csv');
 
-  e.addFunction('keyMatchCustom', customFunctionWrapper);
+  await e.addFunction('keyMatchCustom', customFunctionWrapper);
 
   await testEnforce(e, 'alice', '/alice_data2/myid', 'GET', false);
   await testEnforce(e, 'alice', '/alice_data2/myid/using/res_id', 'GET', true);
