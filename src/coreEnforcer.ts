@@ -17,10 +17,20 @@ import { compile, compileAsync, addBinaryOp } from 'expression-eval';
 import { DefaultEffector, Effect, Effector } from './effect';
 import { FunctionMap, Model, newModel, PolicyOp } from './model';
 import { Adapter, FilteredAdapter, Watcher } from './persist';
-import { DefaultRoleManager, RoleManager } from './rbac';
-import { escapeAssertion, generateGFunction, getEvalValue, hasEval, replaceEval, generatorRunSync, generatorRunAsync } from './util';
+import { DefaultRoleManager, DefaultSyncedRoleManager, RoleManager, SyncedRoleManager } from './rbac';
+import {
+  escapeAssertion,
+  generateGFunction,
+  getEvalValue,
+  hasEval,
+  replaceEval,
+  generatorRunSync,
+  generatorRunAsync,
+  generateSyncGFunction,
+} from './util';
 import { getLogger, logPrint } from './log';
 import { MatchingFunc } from './rbac';
+import { SyncedEnforcer } from './syncedEnforcer';
 
 type Matcher = ((context: any) => Promise<any>) | ((context: any) => any);
 
@@ -38,7 +48,7 @@ export class CoreEnforcer {
 
   protected adapter: Adapter;
   protected watcher: Watcher | null = null;
-  protected rmMap: Map<string, RoleManager> = new Map<string, RoleManager>([['g', new DefaultRoleManager(10)]]);
+  protected rmMap: Map<string, RoleManager | SyncedRoleManager>;
 
   protected enabled = true;
   protected autoSave = true;
@@ -69,8 +79,20 @@ export class CoreEnforcer {
    */
   public loadModel(): void {
     this.model = newModel();
+    this.model.synced = this instanceof SyncedEnforcer;
     this.model.loadModel(this.modelPath);
     this.model.printModel();
+  }
+
+  /**
+   * get a new RoleManager based on the type of current Enforcer
+   */
+  public newRoleManager(): RoleManager | SyncedRoleManager {
+    if (this instanceof SyncedEnforcer) {
+      return new DefaultSyncedRoleManager(10);
+    } else {
+      return new DefaultRoleManager(10);
+    }
   }
 
   /**
@@ -124,21 +146,21 @@ export class CoreEnforcer {
    *
    * @param rm the role manager.
    */
-  public setRoleManager(rm: RoleManager): void {
+  public setRoleManager(rm: RoleManager | SyncedRoleManager): void {
     this.rmMap.set('g', rm);
   }
 
   /**
    * getRoleManager gets the current role manager.
    */
-  public getRoleManager(): RoleManager {
-    return <RoleManager>this.rmMap.get('g');
+  public getRoleManager(): RoleManager | SyncedRoleManager | undefined {
+    return this.rmMap.get('g');
   }
 
   /**
    * getNamedRoleManager gets role manager by name.
    */
-  public getNamedRoleManager(name: string): RoleManager | undefined {
+  public getNamedRoleManager(name: string): RoleManager | SyncedRoleManager | undefined {
     return this.rmMap.get(name);
   }
 
@@ -163,7 +185,7 @@ export class CoreEnforcer {
     const rm = this.model.model.get('g');
     if (rm) {
       for (const ptype of rm.keys()) {
-        this.rmMap.set(ptype, new DefaultRoleManager(10));
+        this.rmMap.set(ptype, this.newRoleManager());
       }
     }
   }
@@ -352,7 +374,7 @@ export class CoreEnforcer {
   public async buildIncrementalRoleLinks(op: PolicyOp, ptype: string, rules: string[][]): Promise<void> {
     let rm = this.rmMap.get(ptype);
     if (!rm) {
-      rm = new DefaultRoleManager(10);
+      rm = this.newRoleManager();
       this.rmMap.set(ptype, rm);
     }
     await this.model.buildIncrementalRoleLinks(rm, op, 'g', ptype, rules);
@@ -381,7 +403,7 @@ export class CoreEnforcer {
 
     astMap?.forEach((value, key) => {
       const rm = value.rm;
-      functions[key] = generateGFunction(rm);
+      functions[key] = rm instanceof DefaultRoleManager ? generateGFunction(<RoleManager>rm) : generateSyncGFunction(<SyncedRoleManager>rm);
     });
 
     const expString = this.model.model.get('m')?.get('m')?.value;

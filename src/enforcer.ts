@@ -17,6 +17,7 @@ import { Model, newModel } from './model';
 import { Adapter, StringAdapter } from './persist';
 import { getLogger } from './log';
 import { arrayRemoveDuplicates } from './util';
+import { RoleManager, SyncedRoleManager } from './rbac';
 
 /**
  * Enforcer = ManagementEnforcer + RBAC API.
@@ -59,6 +60,8 @@ export class Enforcer extends ManagementEnforcer {
 
     this.model = m;
     this.model.printModel();
+
+    this.rmMap = new Map<string, RoleManager | SyncedRoleManager>([['g', this.newRoleManager()]]);
 
     if (!lazyLoad && this.adapter) {
       await this.loadPolicy();

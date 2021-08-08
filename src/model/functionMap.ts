@@ -18,7 +18,7 @@ export type MatchingFunction = (...arg: any[]) => boolean | number | Promise<boo
 
 // FunctionMap represents the collection of Function.
 export class FunctionMap {
-  private functions: Map<string, any>;
+  private readonly functions: Map<string, any>;
 
   /**
    * constructor is the constructor for FunctionMap.

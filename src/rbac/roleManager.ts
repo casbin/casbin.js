@@ -13,7 +13,11 @@
 // limitations under the License.
 
 // RoleManager provides interface to define the operations for managing roles.
+import { MatchingFunc } from './internalRoleManager';
+
 export interface RoleManager {
+  addDomainMatchingFunc(fn: MatchingFunc): Promise<void>;
+  addMatchingFunc(fn: MatchingFunc): Promise<void>;
   // Clear clears all stored data and resets the role manager to the initial state.
   clear(): Promise<void>;
   // AddLink adds the inheritance link between two roles. role: name1 and role: name2.
@@ -33,4 +37,28 @@ export interface RoleManager {
   getUsers(name: string, ...domain: string[]): Promise<string[]>;
   // PrintRoles prints all the roles to log.
   printRoles(): Promise<void>;
+}
+
+export interface SyncedRoleManager {
+  // Clear clears all stored data and resets the role manager to the initial state.
+  addDomainMatchingFunc(fn: MatchingFunc): void;
+  addMatchingFunc(fn: MatchingFunc): void;
+  clear(): void;
+  // AddLink adds the inheritance link between two roles. role: name1 and role: name2.
+  // domain is a prefix to the roles (can be used for other purposes).
+  addLink(name1: string, name2: string, ...domain: string[]): void;
+  // DeleteLink deletes the inheritance link between two roles. role: name1 and role: name2.
+  // domain is a prefix to the roles (can be used for other purposes).
+  deleteLink(name1: string, name2: string, ...domain: string[]): void;
+  // HasLink determines whether a link exists between two roles. role: name1 inherits role: name2.
+  // domain is a prefix to the roles (can be used for other purposes).
+  hasLink(name1: string, name2: string, ...domain: string[]): boolean;
+  // GetRoles gets the roles that a user inherits.
+  // domain is a prefix to the roles (can be used for other purposes).
+  getRoles(name: string, ...domain: string[]): string[];
+  // GetUsers gets the users that inherits a role.
+  // domain is a prefix to the users (can be used for other purposes).
+  getUsers(name: string, ...domain: string[]): string[];
+  // PrintRoles prints all the roles to log.
+  printRoles(): void;
 }
