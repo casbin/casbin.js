@@ -20,7 +20,7 @@ import { newModel } from './model';
 
 // SyncedEnforcer wraps Enforcer and provides synchronized access
 export class SyncedEnforcer extends Enforcer {
-  private lock = new AwaitLock();
+  lock = new AwaitLock();
 
   /**
    * setWatcher sets the current watcher.
@@ -502,7 +502,7 @@ export class SyncedEnforcer extends Enforcer {
     });
   }
 
-  public getRoleManager(): RoleManager | SyncedRoleManager | undefined {
+  public newRoleManager(): RoleManager | SyncedRoleManager {
     return new DefaultSyncedRoleManager(10);
   }
 
