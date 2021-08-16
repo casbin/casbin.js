@@ -63,7 +63,7 @@ export class Assertion {
     }
   }
 
-  public async buildRoleLinks(rm: rbac.RoleManager | rbac.SyncedRoleManager): Promise<void> {
+  public async buildRoleLinks(rm: rbac.RoleManager): Promise<void> {
     this.rm = rm;
     const count = (this.value.match(/_/g) || []).length;
     if (count < 2) {
