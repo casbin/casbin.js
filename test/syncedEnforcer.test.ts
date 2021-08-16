@@ -1,4 +1,4 @@
-import { Enforcer, newEnforcer, newModel, newSyncedEnforcer, SyncedEnforcer } from '../src';
+import { Enforcer, newModel, newSyncedEnforcer, SyncedEnforcer } from '../src';
 
 function testEnforce(e: Enforcer, sub: any, obj: string, act: string, res: boolean): void {
   expect(e.enforceSync(sub, obj, act)).toBe(res);

@@ -17,7 +17,7 @@ import * as util from '../util';
 import { Config, ConfigInterface } from '../config';
 import { Assertion } from './assertion';
 import { getLogger, logPrint } from '../log';
-import { DefaultRoleManager, DefaultSyncedRoleManager, RoleManager, SyncedRoleManager } from '../rbac';
+import { DefaultRoleManager, DefaultSyncedRoleManager, RoleManager } from '../rbac';
 
 export const sectionNameMap: { [index: string]: string } = {
   r: 'request_definition',
@@ -167,20 +167,14 @@ export class Model {
   }
 
   // buildIncrementalRoleLinks provides incremental build the role inheritance relations.
-  public async buildIncrementalRoleLinks(
-    rm: rbac.RoleManager | rbac.SyncedRoleManager,
-    op: PolicyOp,
-    sec: string,
-    ptype: string,
-    rules: string[][]
-  ): Promise<void> {
+  public async buildIncrementalRoleLinks(rm: rbac.RoleManager, op: PolicyOp, sec: string, ptype: string, rules: string[][]): Promise<void> {
     if (sec === 'g') {
       await this.model.get(sec)?.get(ptype)?.buildIncrementalRoleLinks(rm, op, rules);
     }
   }
 
   // buildRoleLinks initializes the roles in RBAC.
-  public async buildRoleLinks(rmMap: Map<string, RoleManager | SyncedRoleManager>): Promise<void> {
+  public async buildRoleLinks(rmMap: Map<string, RoleManager>): Promise<void> {
     const astMap = this.model.get('g');
     if (!astMap) {
       return;

@@ -1,7 +1,11 @@
 import { internalRoleManager, MatchingFunc } from './internalRoleManager';
-import { SyncedRoleManager } from './roleManager';
+import { RoleManager } from './roleManager';
 
-export class DefaultSyncedRoleManager extends internalRoleManager implements SyncedRoleManager {
+export class DefaultSyncedRoleManager extends internalRoleManager implements RoleManager {
+  synced(): boolean {
+    return true;
+  }
+
   addDomainMatchingFunc(fn: MatchingFunc): void {
     return this.addDomainMatchingFuncInternal(fn);
   }

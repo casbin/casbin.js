@@ -16,6 +16,7 @@
 // because the expression evaluation doesn't support such variable names.
 
 import parse from 'csv-parse/lib/sync';
+import { RoleManager } from '../rbac';
 
 function escapeAssertion(s: string): string {
   s = s.replace(/r\./g, 'r_');
@@ -163,6 +164,15 @@ function policyStringToArray(policy: string): string[][] {
   });
 }
 
+function isRoleManagerSync(rm: RoleManager): boolean {
+  const synced = rm.synced;
+  if (synced) {
+    return synced();
+  } else {
+    return false;
+  }
+}
+
 export {
   escapeAssertion,
   removeComments,
@@ -180,4 +190,5 @@ export {
   deepCopy,
   policyArrayToString,
   policyStringToArray,
+  isRoleManagerSync,
 };

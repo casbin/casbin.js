@@ -15,7 +15,7 @@
 import { Enforcer, newEnforcerWithClass } from './enforcer';
 import AwaitLock from 'await-lock';
 import { Watcher } from './persist';
-import { DefaultSyncedRoleManager, MatchingFunc, RoleManager, SyncedRoleManager } from './rbac';
+import { DefaultSyncedRoleManager, MatchingFunc, RoleManager } from './rbac';
 import { newModel } from './model';
 
 // SyncedEnforcer wraps Enforcer and provides synchronized access
@@ -502,7 +502,7 @@ export class SyncedEnforcer extends Enforcer {
     });
   }
 
-  public newRoleManager(): RoleManager | SyncedRoleManager {
+  public newRoleManager(): RoleManager {
     return new DefaultSyncedRoleManager(10);
   }
 

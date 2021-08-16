@@ -4,6 +4,10 @@ import { internalRoleManager, MatchingFunc } from './internalRoleManager';
 import { RoleManager } from './roleManager';
 
 export class DefaultRoleManager extends internalRoleManager implements RoleManager {
+  synced(): boolean {
+    return false;
+  }
+
   addDomainMatchingFunc(fn: MatchingFunc): Promise<void> {
     return Promise.resolve(this.addDomainMatchingFuncInternal(fn));
   }

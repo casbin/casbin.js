@@ -275,7 +275,7 @@ function generateGFunction(rm: rbac.RoleManager): GFunction {
   };
 }
 
-function generateSyncGFunction(rm: rbac.SyncedRoleManager): syncGFuntion {
+function generateSyncGFunction(rm: rbac.RoleManager): syncGFuntion {
   const memorized = new Map<string, boolean>();
   return function func(...args: any[]): boolean {
     const key = args.toString();
@@ -291,10 +291,10 @@ function generateSyncGFunction(rm: rbac.SyncedRoleManager): syncGFuntion {
     if (!rm) {
       value = name1 === name2;
     } else if (args.length === 2) {
-      value = rm.hasLink(name1, name2);
+      value = rm.hasLink(name1, name2) as boolean;
     } else {
       const domain: string = args[2].toString();
-      value = rm.hasLink(name1, name2, domain);
+      value = rm.hasLink(name1, name2, domain) as boolean;
     }
 
     memorized.set(key, value);
