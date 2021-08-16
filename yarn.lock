@@ -2235,10 +2235,10 @@ capture-exit@^2.0.0:
   dependencies:
     rsvp "^4.8.4"
 
-casbin@^5.11.1:
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/casbin/-/casbin-5.11.1.tgz#763ed69105a57ce0e2356684dd60cbeeb6db5b7a"
-  integrity sha512-/6eDOFyv3sgjJRVKTTDN0V4jTPXiTPNwsqoI5Bge/UkIGnl6gdV6yOpKEbTDXgsQWW5vfSfOfsoA/xwqqNNuOg==
+casbin@^5.11.3:
+  version "5.11.3"
+  resolved "https://registry.yarnpkg.com/casbin/-/casbin-5.11.3.tgz#7604bd66237424cdccf9f36f0d2478dfc4374bae"
+  integrity sha512-Bj/wQocX+swYEXsHyKV3d3TL7QKK/6BvGJJNodRLyMqP0pPR21JBEybQcqoHpUVDHvACo1rScus/MNmBbNmRVA==
   dependencies:
     await-lock "^2.0.1"
     csv-parse "^4.15.3"
