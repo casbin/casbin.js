@@ -244,11 +244,11 @@ function globMatch(string: string, pattern: string): boolean {
   }
 }
 
-export type GFunction = (...args: string[]) => Promise<boolean>;
+export type gFunction = (...args: string[]) => Promise<boolean>;
 export type syncGFuntion = (...args: string[]) => boolean;
 
 // generateGFunction is the factory method of the g(_, _) function.
-function generateGFunction(rm: rbac.RoleManager): GFunction {
+function generateGFunction(rm: rbac.RoleManager): gFunction {
   const memorized = new Map<string, boolean>();
   return async function func(...args: any[]): Promise<boolean> {
     const key = args.toString();
@@ -275,6 +275,7 @@ function generateGFunction(rm: rbac.RoleManager): GFunction {
   };
 }
 
+// generateGFunction is the factory method of the sync g(_, _) function.
 function generateSyncGFunction(rm: rbac.RoleManager): syncGFuntion {
   const memorized = new Map<string, boolean>();
   return function func(...args: any[]): boolean {

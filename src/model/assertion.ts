@@ -29,7 +29,7 @@ export class Assertion {
   /**
    * constructor is the constructor for Assertion.
    */
-  constructor(synced: boolean) {
+  constructor(synced = false) {
     this.key = '';
     this.value = '';
     this.tokens = [];

@@ -17,7 +17,7 @@ import * as util from '../util';
 import { Config, ConfigInterface } from '../config';
 import { Assertion } from './assertion';
 import { getLogger, logPrint } from '../log';
-import { DefaultRoleManager, DefaultSyncedRoleManager, RoleManager } from '../rbac';
+import { RoleManager } from '../rbac';
 
 export const sectionNameMap: { [index: string]: string } = {
   r: 'request_definition',
@@ -181,10 +181,9 @@ export class Model {
     }
     for (const key of astMap.keys()) {
       const ast = astMap.get(key);
-      let rm = rmMap.get(key);
+      const rm = rmMap.get(key);
       if (!rm) {
-        rm = this.synced ? new DefaultSyncedRoleManager(10) : new DefaultRoleManager(10);
-        rmMap.set(key, rm);
+        throw new Error("Role manager didn't exist.");
       }
       await ast?.buildRoleLinks(rm);
     }
