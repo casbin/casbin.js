@@ -2,7 +2,7 @@ import { internalRoleManager, MatchingFunc } from './internalRoleManager';
 import { RoleManager } from './roleManager';
 
 export class DefaultSyncedRoleManager extends internalRoleManager implements RoleManager {
-  public static synced(): boolean {
+  public synced(): boolean {
     return true;
   }
 
