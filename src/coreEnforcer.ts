@@ -148,6 +148,16 @@ export class CoreEnforcer {
   }
 
   /**
+   * setRoleManager sets the current role manager.
+   *
+   * @param name
+   * @param rm the role manager.
+   */
+  public setNamedRoleManager(name: string, rm: RoleManager): void {
+    this.rmMap.set(name, rm);
+  }
+
+  /**
    * getRoleManager gets the current role manager.
    */
   public getRoleManager(): RoleManager | undefined {
