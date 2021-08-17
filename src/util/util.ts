@@ -90,8 +90,8 @@ function hasEval(s: string): boolean {
 }
 
 // replaceEval replace function eval with the value of its parameters
-function replaceEval(s: string, rule: string): string {
-  return s.replace(evalReg, '(' + rule + ')');
+function replaceEval(s: string, ruleName: string, rule: string): string {
+  return s.replace(`eval(${ruleName})`, '(' + rule + ')');
 }
 
 // getEvalValue returns the parameters of function eval
@@ -173,6 +173,34 @@ function isRoleManagerSync(rm: RoleManager): boolean {
   }
 }
 
+function customIn(a: number | string, b: number | string): number {
+  if ((b as any) instanceof Array) {
+    return (((b as any) as Array<any>).includes(a) as unknown) as number;
+  }
+  return ((a in (b as any)) as unknown) as number;
+}
+
+function bracketCompatible(exp: string): string {
+  // TODO: This function didn't support nested bracket.
+  if (!(exp.includes(' in ') && exp.includes(' ('))) {
+    return exp;
+  }
+
+  const re = / \([^)]*\)/g;
+  const array = exp.split('');
+
+  let reResult: RegExpExecArray | null;
+  while ((reResult = re.exec(exp)) !== null) {
+    if (!(reResult[0] as string).includes(',')) {
+      continue;
+    }
+    array[reResult.index + 1] = '[';
+    array[re.lastIndex - 1] = ']';
+  }
+  exp = array.join('');
+  return exp;
+}
+
 export {
   escapeAssertion,
   removeComments,
@@ -191,4 +219,6 @@ export {
   policyArrayToString,
   policyStringToArray,
   isRoleManagerSync,
+  customIn,
+  bracketCompatible,
 };

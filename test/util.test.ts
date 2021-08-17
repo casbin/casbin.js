@@ -145,8 +145,12 @@ test('test hasEval', () => {
 });
 
 test('test replaceEval', () => {
-  expect(util.replaceEval('eval() && a && b && c', 'a')).toEqual('(a) && a && b && c');
-  expect(util.replaceEval('eval() && a && b && c', '(a)')).toEqual('((a)) && a && b && c');
+  expect(util.replaceEval('eval() && a && b && c', '', 'a')).toEqual('(a) && a && b && c');
+  expect(util.replaceEval('eval() && a && b && c', '', '(a)')).toEqual('((a)) && a && b && c');
+  expect(util.replaceEval('eval(p_some_rule) && c', 'p_some_rule', '(a)')).toEqual('((a)) && c');
+  expect(util.replaceEval('eval(p_some_rule) && eval(p_some_other_rule) && c', 'p_some_rule', '(a)')).toEqual(
+    '((a)) && eval(p_some_other_rule) && c'
+  );
 });
 
 test('test getEvalValue', () => {
@@ -169,4 +173,17 @@ test('test policyStringToArray', () => {
 test('test policyArrayToString', () => {
   expect(util.policyArrayToString(['p', 'alice', 'data1', 'read'])).toEqual(`"p","alice","data1","read"`);
   expect(util.policyArrayToString(['p', 'alice ', ' data1', 'read'])).toEqual(`"p","alice "," data1","read"`);
+});
+
+test('test keyGetFunc', () => {
+  expect(util.keyGetFunc('/foo/bar', '/foo/*')).toEqual('bar');
+  expect(util.keyGetFunc('/bar/foo', '/foo/*')).toEqual('');
+});
+
+test('test keyGet2Func', () => {
+  expect(util.keyGet2Func('/foo/bar', '/foo/*', 'bar')).toEqual('');
+  expect(util.keyGet2Func('/foo/baz', '/foo/:bar', 'bar')).toEqual('baz');
+  expect(util.keyGet2Func('/foo/baz/foo', '/foo/:bar/foo', 'bar')).toEqual('baz');
+  expect(util.keyGet2Func('/baz', '/foo', 'bar')).toEqual('');
+  expect(util.keyGet2Func('/foo/baz', '/foo', 'bar')).toEqual('');
 });
