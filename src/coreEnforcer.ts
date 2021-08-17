@@ -79,7 +79,6 @@ export class CoreEnforcer {
    */
   public loadModel(): void {
     this.model = newModel();
-    // this.model.synced = this instanceof SyncedEnforcer;
     this.model.synced = false;
     this.model.loadModel(this.modelPath);
     this.model.printModel();
