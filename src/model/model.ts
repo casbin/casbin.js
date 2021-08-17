@@ -17,7 +17,7 @@ import * as util from '../util';
 import { Config, ConfigInterface } from '../config';
 import { Assertion } from './assertion';
 import { getLogger, logPrint } from '../log';
-import { DefaultRoleManager } from '../rbac';
+import { RoleManager } from '../rbac';
 
 export const sectionNameMap: { [index: string]: string } = {
   r: 'request_definition',
@@ -38,6 +38,7 @@ export class Model {
   // Model represents the whole access control model.
   // Mest-map is the collection of assertions, can be "r", "p", "g", "e", "m".
   public model: Map<string, Map<string, Assertion>>;
+  public synced = false;
 
   /**
    * constructor is the constructor for Model.
@@ -77,7 +78,7 @@ export class Model {
       return false;
     }
 
-    const ast = new Assertion();
+    const ast = new Assertion(this.synced);
     ast.key = key;
     ast.value = value;
 
@@ -173,17 +174,16 @@ export class Model {
   }
 
   // buildRoleLinks initializes the roles in RBAC.
-  public async buildRoleLinks(rmMap: Map<string, rbac.RoleManager>): Promise<void> {
+  public async buildRoleLinks(rmMap: Map<string, RoleManager>): Promise<void> {
     const astMap = this.model.get('g');
     if (!astMap) {
       return;
     }
     for (const key of astMap.keys()) {
       const ast = astMap.get(key);
-      let rm = rmMap.get(key);
+      const rm = rmMap.get(key);
       if (!rm) {
-        rm = new DefaultRoleManager(10);
-        rmMap.set(key, rm);
+        throw new Error("Role manager didn't exist.");
       }
       await ast?.buildRoleLinks(rm);
     }

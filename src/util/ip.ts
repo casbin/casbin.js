@@ -273,9 +273,6 @@ export const ip = {
     });
     return ipl >>> 0;
   },
-  fromLong: function (ipl: number): string {
-    return (ipl >>> 24) + '.' + ((ipl >> 16) & 255) + '.' + ((ipl >> 8) & 255) + '.' + (ipl & 255);
-  },
 };
 
 function _normalizeFamily(family: string): string {

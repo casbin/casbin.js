@@ -15,11 +15,12 @@
 import { Enforcer, newEnforcerWithClass } from './enforcer';
 import AwaitLock from 'await-lock';
 import { Watcher } from './persist';
-import { MatchingFunc } from './rbac';
+import { DefaultSyncedRoleManager, MatchingFunc, RoleManager } from './rbac';
+import { newModel } from './model';
 
 // SyncedEnforcer wraps Enforcer and provides synchronized access
 export class SyncedEnforcer extends Enforcer {
-  private lock = new AwaitLock();
+  lock = new AwaitLock();
 
   /**
    * setWatcher sets the current watcher.
@@ -499,6 +500,17 @@ export class SyncedEnforcer extends Enforcer {
     return super.addNamedDomainMatchingFunc(ptype, fn).finally(() => {
       this.lock.release();
     });
+  }
+
+  public newRoleManager(): RoleManager {
+    return new DefaultSyncedRoleManager(10);
+  }
+
+  public loadModel(): void {
+    this.model = newModel();
+    this.model.synced = true;
+    this.model.loadModel(this.modelPath);
+    this.model.printModel();
   }
 }
 

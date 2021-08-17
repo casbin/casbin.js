@@ -18,7 +18,17 @@ import { DefaultEffector, Effect, Effector } from './effect';
 import { FunctionMap, Model, newModel, PolicyOp } from './model';
 import { Adapter, FilteredAdapter, Watcher } from './persist';
 import { DefaultRoleManager, RoleManager } from './rbac';
-import { escapeAssertion, generateGFunction, getEvalValue, hasEval, replaceEval, generatorRunSync, generatorRunAsync } from './util';
+import {
+  escapeAssertion,
+  generateGFunction,
+  getEvalValue,
+  hasEval,
+  replaceEval,
+  generatorRunSync,
+  generatorRunAsync,
+  generateSyncGFunction,
+  isRoleManagerSync,
+} from './util';
 import { getLogger, logPrint } from './log';
 import { MatchingFunc } from './rbac';
 
@@ -38,7 +48,7 @@ export class CoreEnforcer {
 
   protected adapter: Adapter;
   protected watcher: Watcher | null = null;
-  protected rmMap: Map<string, RoleManager> = new Map<string, RoleManager>([['g', new DefaultRoleManager(10)]]);
+  protected rmMap: Map<string, RoleManager>;
 
   protected enabled = true;
   protected autoSave = true;
@@ -69,8 +79,16 @@ export class CoreEnforcer {
    */
   public loadModel(): void {
     this.model = newModel();
+    this.model.synced = false;
     this.model.loadModel(this.modelPath);
     this.model.printModel();
+  }
+
+  /**
+   * get a new RoleManager based on the type of current Enforcer
+   */
+  public newRoleManager(): RoleManager {
+    return new DefaultRoleManager(10);
   }
 
   /**
@@ -129,10 +147,20 @@ export class CoreEnforcer {
   }
 
   /**
+   * setRoleManager sets the current role manager.
+   *
+   * @param name
+   * @param rm the role manager.
+   */
+  public setNamedRoleManager(name: string, rm: RoleManager): void {
+    this.rmMap.set(name, rm);
+  }
+
+  /**
    * getRoleManager gets the current role manager.
    */
-  public getRoleManager(): RoleManager {
-    return <RoleManager>this.rmMap.get('g');
+  public getRoleManager(): RoleManager | undefined {
+    return this.rmMap.get('g');
   }
 
   /**
@@ -163,7 +191,7 @@ export class CoreEnforcer {
     const rm = this.model.model.get('g');
     if (rm) {
       for (const ptype of rm.keys()) {
-        this.rmMap.set(ptype, new DefaultRoleManager(10));
+        this.rmMap.set(ptype, this.newRoleManager());
       }
     }
   }
@@ -352,7 +380,7 @@ export class CoreEnforcer {
   public async buildIncrementalRoleLinks(op: PolicyOp, ptype: string, rules: string[][]): Promise<void> {
     let rm = this.rmMap.get(ptype);
     if (!rm) {
-      rm = new DefaultRoleManager(10);
+      rm = this.newRoleManager();
       this.rmMap.set(ptype, rm);
     }
     await this.model.buildIncrementalRoleLinks(rm, op, 'g', ptype, rules);
@@ -381,7 +409,7 @@ export class CoreEnforcer {
 
     astMap?.forEach((value, key) => {
       const rm = value.rm;
-      functions[key] = generateGFunction(rm);
+      functions[key] = isRoleManagerSync(rm) ? generateSyncGFunction(rm) : generateGFunction(rm);
     });
 
     const expString = this.model.model.get('m')?.get('m')?.value;

@@ -80,7 +80,7 @@ export class InternalEnforcer extends CoreEnforcer {
       this.watcher.update();
     }
 
-    const [ok, effects] = await this.model.addPolicies(sec, ptype, rules);
+    const [ok, effects] = this.model.addPolicies(sec, ptype, rules);
     if (sec === 'g' && ok && effects?.length) {
       await this.buildIncrementalRoleLinks(PolicyOp.PolicyAdd, ptype, effects);
     }
@@ -147,7 +147,7 @@ export class InternalEnforcer extends CoreEnforcer {
       this.watcher.update();
     }
 
-    const ok = await this.model.removePolicy(sec, ptype, rule);
+    const ok = this.model.removePolicy(sec, ptype, rule);
     if (sec === 'g' && ok) {
       await this.buildIncrementalRoleLinks(PolicyOp.PolicyRemove, ptype, [rule]);
     }

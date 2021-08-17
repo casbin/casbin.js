@@ -15,6 +15,7 @@
 import * as rbac from '../rbac';
 import { logPrint } from '../log';
 import { PolicyOp } from './model';
+import { RoleManager } from '../rbac';
 
 // Assertion represents an expression in a section of the model.
 // For example: r = sub, obj, act
@@ -23,17 +24,17 @@ export class Assertion {
   public value: string;
   public tokens: string[];
   public policy: string[][];
-  public rm: rbac.RoleManager;
+  public rm: RoleManager;
 
   /**
    * constructor is the constructor for Assertion.
    */
-  constructor() {
+  constructor(synced = false) {
     this.key = '';
     this.value = '';
     this.tokens = [];
     this.policy = [];
-    this.rm = new rbac.DefaultRoleManager(10);
+    this.rm = synced ? new rbac.DefaultSyncedRoleManager(10) : new rbac.DefaultRoleManager(10);
   }
 
   public async buildIncrementalRoleLinks(rm: rbac.RoleManager, op: PolicyOp, rules: string[][]): Promise<void> {

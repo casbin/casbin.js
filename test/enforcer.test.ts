@@ -587,8 +587,8 @@ test('TestEnforceEx', async () => {
 
   await e.addPermissionForUser('alice', 'data1', 'invalid');
 
-  testEnforceEx(e, 'alice', 'data1', 'read', [false, []]);
-  testEnforceEx(e, 'alice', 'data1', 'invalid', [true, ['alice', 'data1', 'invalid']]);
+  await testEnforceEx(e, 'alice', 'data1', 'read', [false, []]);
+  await testEnforceEx(e, 'alice', 'data1', 'invalid', [true, ['alice', 'data1', 'invalid']]);
 });
 
 test('TestSyncEnforceEx', async () => {
