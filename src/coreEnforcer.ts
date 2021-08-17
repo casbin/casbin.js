@@ -28,6 +28,8 @@ import {
   generatorRunAsync,
   generateSyncGFunction,
   isRoleManagerSync,
+  customIn,
+  bracketCompatible,
 } from './util';
 import { getLogger, logPrint } from './log';
 import { MatchingFunc } from './rbac';
@@ -58,14 +60,11 @@ export class CoreEnforcer {
   private getExpression(asyncCompile: boolean, exp: string): Matcher {
     const matcherKey = `${asyncCompile ? 'ASYNC[' : 'SYNC['}${exp}]`;
 
-    addBinaryOp('in', 1, (a, b) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      return (a in b) as number;
-    });
+    addBinaryOp('in', 1, customIn);
 
     let expression = this.matcherMap.get(matcherKey);
     if (!expression) {
+      exp = bracketCompatible(exp);
       expression = asyncCompile ? compileAsync(exp) : compile(exp);
       this.matcherMap.set(matcherKey, expression);
     }
@@ -455,7 +454,7 @@ export class CoreEnforcer {
           for (const ruleName of ruleNames) {
             if (ruleName in parameters) {
               const rule = escapeAssertion(parameters[ruleName]);
-              expWithRule = replaceEval(expWithRule, rule);
+              expWithRule = replaceEval(expWithRule, ruleName, rule);
             } else {
               throw new Error(`${ruleName} not in ${parameters}`);
             }

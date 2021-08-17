@@ -612,3 +612,22 @@ test('Test RBAC G2', async () => {
   expect(await e.enforce('alice', 'data1', 'read')).toBe(false);
   expect(await e.enforce('admin', 'data1', 'read')).toBe(true);
 });
+
+test('test ABAC multiple eval()', async () => {
+  const m = newModel();
+  m.addDef('r', 'r', 'sub, obj, act');
+  m.addDef('p', 'p', 'sub_rule_1, sub_rule_2, act');
+  m.addDef('e', 'e', 'some(where (p.eft == allow))');
+  m.addDef('m', 'm', 'eval(p.sub_rule_1) && eval(p.sub_rule_2) && r.act == p.act');
+
+  const policy = new StringAdapter(
+    `
+    p, r.sub > 50, r.obj > 50, read
+    `
+  );
+
+  const e = await newEnforcer(m, policy);
+  await testEnforce(e, 56, (98 as unknown) as string, 'read', true);
+  await testEnforce(e, 23, (67 as unknown) as string, 'read', false);
+  await testEnforce(e, 78, (34 as unknown) as string, 'read', false);
+});
