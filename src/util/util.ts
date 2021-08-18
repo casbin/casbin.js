@@ -15,7 +15,6 @@
 // escapeAssertion escapes the dots in the assertion,
 // because the expression evaluation doesn't support such variable names.
 
-import parse from 'csv-parse/lib/sync';
 import { RoleManager } from '../rbac';
 
 function escapeAssertion(s: string): string {
@@ -157,11 +156,66 @@ function policyArrayToString(policy: string[]): string {
 }
 
 function policyStringToArray(policy: string): string[][] {
-  return parse(policy, {
-    delimiter: ',',
-    skip_empty_lines: true,
-    trim: true,
-  });
+  const endCommaRe = /,$/;
+  const quotaWrapperRe = /^".*"$/;
+
+  const lines: string[] = policy.split(/\r?\n/);
+  const arrays: string[][] = [];
+
+  for (let line of lines) {
+    const commentLabel = line.indexOf('#');
+    if (commentLabel !== -1) {
+      line = line.substr(0, commentLabel);
+    }
+
+    line = line.trim();
+
+    if (endCommaRe.test(line)) {
+      throw new Error('The csv standard does not allow a comma at the end of a sentence');
+    }
+
+    const slices = line.split(',');
+    let tokens: string[] = [];
+
+    for (let slice of slices) {
+      slice = slice.trim();
+
+      // Remove parcel quotes
+      if (quotaWrapperRe.test(slice)) {
+        slice = slice.substr(1, slice.length - 2);
+      }
+
+      if (slice.includes('""')) {
+        // "" Escape processing
+        const quotaSequence: number[] = [];
+
+        let pos = slice.indexOf('"');
+        while (pos !== -1) {
+          quotaSequence.push(pos);
+          pos = slice.indexOf('"', pos + 1);
+        }
+
+        if (quotaSequence.length % 2 !== 0) {
+          throw new Error('Number of quotation marks does not match');
+        }
+
+        for (let i = 0; i < quotaSequence.length; ) {
+          if (quotaSequence[i] !== quotaSequence[i + 1] - 1) {
+            throw new Error(`Unescaped " at ${line}`);
+          }
+          i += 2;
+        }
+
+        slice = slice.replace(/""/g, '"');
+      }
+
+      tokens.push(slice);
+    }
+
+    arrays.push(deepCopy(tokens));
+    tokens = [];
+  }
+  return arrays;
 }
 
 function isRoleManagerSync(rm: RoleManager): boolean {
