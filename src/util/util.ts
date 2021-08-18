@@ -158,14 +158,19 @@ function policyArrayToString(policy: string[]): string {
 function policyStringToArray(policy: string): string[][] {
   const endCommaRe = /,$/;
   const quotaWrapperRe = /^".*"$/;
+  const commentLineRe = /^\s*#/;
+  const emptyLineRe = /^\s*$/;
 
   const lines: string[] = policy.split(/\r?\n/);
   const arrays: string[][] = [];
 
   for (let line of lines) {
-    const commentLabel = line.indexOf('#');
-    if (commentLabel !== -1) {
-      line = line.substr(0, commentLabel);
+    if (commentLineRe.test(line)) {
+      continue;
+    }
+
+    if (emptyLineRe.test(line)) {
+      continue;
     }
 
     line = line.trim();
@@ -209,7 +214,9 @@ function policyStringToArray(policy: string): string[][] {
         slice = slice.replace(/""/g, '"');
       }
 
-      tokens.push(slice);
+      if (slice) {
+        tokens.push(slice);
+      }
     }
 
     arrays.push(deepCopy(tokens));

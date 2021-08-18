@@ -161,7 +161,9 @@ test('test getEvalValue', () => {
 });
 
 test('test policyStringToArray', () => {
-  expect(util.policyStringToArray('p,alice,data1,read#testtest')).toEqual([['p', 'alice', 'data1', 'read']]);
+  expect(util.policyStringToArray('p,alice,data1,read')).toEqual([['p', 'alice', 'data1', 'read']]);
+  expect(util.policyStringToArray('p,alice,data1,read#233')).toEqual([['p', 'alice', 'data1', 'read#233']]);
+  expect(util.policyStringToArray('#p,alice,data1,read')).toEqual([]);
   expect(util.policyStringToArray('p,ali""ce,data1,read')).toEqual([['p', 'ali"ce', 'data1', 'read']]);
   expect(util.policyStringToArray(`"p","alice","data1","read"`)).toEqual([['p', 'alice', 'data1', 'read']]);
   expect(util.policyStringToArray(`"p"," alice","data1 ","read"`)).toEqual([['p', ' alice', 'data1 ', 'read']]);
