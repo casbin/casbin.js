@@ -24,14 +24,14 @@ import { RoleManager } from './rbac';
  */
 export class Enforcer extends ManagementEnforcer {
   /**
-   * initWithFile initializes an enforcer with a model file and a policy file.
-   * @param modelPath model file path
+   * initWithString initializes an enforcer with a model file and a policy file.
+   * @param modelString model file content
    * @param policyString policy CSV string
    * @param lazyLoad whether to load policy at initial time
    */
-  public async initWithString(modelPath: string, policyString: string, lazyLoad = false): Promise<void> {
+  public async initWithString(modelString: string, policyString: string, lazyLoad = false): Promise<void> {
     const a = new MemoryAdapter(policyString);
-    await this.initWithAdapter(modelPath, a, lazyLoad);
+    await this.initWithAdapter(modelString, a, lazyLoad);
   }
 
   /**
@@ -401,11 +401,11 @@ export async function newEnforcerWithClass<T extends Enforcer>(enforcer: new () 
 }
 
 /**
- * newEnforcer creates an enforcer via file or DB.
+ * newEnforcer creates an enforcer via string or DB.
  *
- * File:
+ * String:
  * ```js
- * const e = new Enforcer('path/to/basic_model.conf', 'path/to/basic_policy.csv');
+ * const e = new Enforcer('content of basic_model.conf', 'content of basic_policy.csv');
  * ```
  *
  * MySQL DB:
