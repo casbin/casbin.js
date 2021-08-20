@@ -14,7 +14,7 @@
 
 import { readFileSync } from 'fs';
 
-import { newModel, newEnforcer, Enforcer, StringAdapter, Util } from '../src';
+import { newModel, newEnforcer, Enforcer, MemoryAdapter, Util } from '../src';
 import { getEnforcerWithPath, getStringAdapter } from './utils';
 
 async function testEnforce(e: Enforcer, sub: any, obj: string, act: string, res: boolean): Promise<void> {
@@ -279,7 +279,7 @@ test('TestReloadPolicy', async () => {
 test('TestSavePolicy', async () => {
   const e = await getEnforcerWithPath('examples/rbac_model.conf', 'examples/rbac_policy.csv');
 
-  await e.savePolicy();
+  expect(e.savePolicy()).rejects.toThrowError(new Error('not implemented'));
 });
 
 test('TestClearPolicy', async () => {
@@ -392,7 +392,7 @@ test('TestInitWithAdapter', async () => {
 
 test('TestInitWithStringAdapter', async () => {
   const policy = readFileSync('examples/basic_policy.csv').toString();
-  const adapter = new StringAdapter(policy);
+  const adapter = new MemoryAdapter(policy);
   const e = await getEnforcerWithPath('examples/basic_model.conf', adapter);
 
   await testEnforce(e, 'alice', 'data1', 'read', true);
@@ -456,7 +456,7 @@ test('TestSetAdapterFromString', async () => {
 
   const policy = readFileSync('examples/basic_policy.csv').toString();
 
-  const a = new StringAdapter(policy);
+  const a = new MemoryAdapter(policy);
   e.setAdapter(a);
   await e.loadPolicy();
 
@@ -491,7 +491,7 @@ test('TestInitEmpty with String Adapter', async () => {
   m.addDef('m', 'm', 'r.sub == p.sub && keyMatch(r.obj, p.obj) && regexMatch(r.act, p.act)');
 
   const policy = readFileSync('examples/keymatch_policy.csv').toString();
-  const a = new StringAdapter(policy);
+  const a = new MemoryAdapter(policy);
 
   e.setModel(m);
   e.setAdapter(a);
@@ -502,7 +502,7 @@ test('TestInitEmpty with String Adapter', async () => {
 
 describe('Unimplemented File Adapter methods', () => {
   let e = {} as Enforcer;
-  let a = {} as StringAdapter;
+  let a = {} as MemoryAdapter;
 
   beforeEach(async () => {
     a = getStringAdapter('examples/basic_policy.csv');
@@ -516,11 +516,11 @@ describe('Unimplemented File Adapter methods', () => {
 
 describe('Unimplemented String Adapter methods', () => {
   let e = {} as Enforcer;
-  let a = {} as StringAdapter;
+  let a = {} as MemoryAdapter;
 
   beforeEach(async () => {
     const policy = readFileSync('examples/basic_policy.csv').toString();
-    a = new StringAdapter(policy);
+    a = new MemoryAdapter(policy);
     e = await getEnforcerWithPath('examples/basic_model.conf', a);
   });
 
@@ -620,7 +620,7 @@ test('test ABAC multiple eval()', async () => {
   m.addDef('e', 'e', 'some(where (p.eft == allow))');
   m.addDef('m', 'm', 'eval(p.sub_rule_1) && eval(p.sub_rule_2) && r.act == p.act');
 
-  const policy = new StringAdapter(
+  const policy = new MemoryAdapter(
     `
     p, r.sub > 50, r.obj > 50, read
     `
