@@ -2,7 +2,7 @@
 
 [![NPM version][npm-image]][npm-url]
 [![NPM download][download-image]][download-url]
-[![install size](https://packagephobia.now.sh/badge?p=casbin)](https://packagephobia.now.sh/result?p=casbin)
+[![install size](https://packagephobia.now.sh/badge?p=casbin.js)](https://packagephobia.now.sh/result?p=casbin)
 [![codebeat badge](https://codebeat.co/badges/c17c9ee1-da42-4db3-8047-9574ad2b23b1)](https://codebeat.co/projects/github-com-casbin-casbin.js-master)
 [![GitHub Actions](https://github.com/casbin/casbin.js/workflows/main/badge.svg)](https://github.com/casbin/casbin.js/actions)
 [![Coverage Status](https://coveralls.io/repos/github/casbin/casbin.js/badge.svg?branch=master)](https://coveralls.io/github/casbin/casbin.js?branch=master)
@@ -40,10 +40,10 @@ https://casbin.org/docs/en/overview
 
 ```shell script
 # NPM
-npm install casbin --save
+npm install casbin.js@next --save
 
 # Yarn
-yarn add casbin
+yarn add casbin.js@next
 ```
 
 ## Get started
@@ -56,7 +56,7 @@ const { newEnforcer } = require('casbin');
 // For browser:
 // import { newEnforcer } from 'casbin';
 
-const enforcer = await newEnforcer('basic_model.conf', 'basic_policy.csv');
+const enforcer = await newEnforcer(model_string, policy_string);
 ```
 
 > **Note**: you can also initialize an enforcer with policy in DB instead of file, see [Persistence](#policy-persistence) section for details.
