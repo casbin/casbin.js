@@ -42,12 +42,12 @@ export class Config implements ConfigInterface {
   /**
    * newConfig create an empty configuration representation from file.
    *
-   * @param string the content of the model file.
+   * @param text the content of the model file.
    * @return the constructor of Config.
    */
-  public static newConfig(string: string): Config {
+  public static newConfig(text: string): Config {
     const config = new Config();
-    config.parseText(string);
+    config.parseText(text);
     return config;
   }
 
