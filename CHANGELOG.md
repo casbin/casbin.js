@@ -1,3 +1,10 @@
+# [1.0.0-beta.2](https://github.com/casbin/casbin.js/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2021-08-22)
+
+
+### Bug Fixes
+
+* fix ts4 build configuration ([a5034c8](https://github.com/casbin/casbin.js/commit/a5034c889c38a45010241a41173ed4f6ed8ce34f))
+
 # 1.0.0-beta.1 (2021-08-22)
 
 ### Features
