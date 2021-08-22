@@ -8,7 +8,8 @@
     "declaration": true,
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "rootDir": "./src"
   },
-  "include": ["src/**/*", "test/utils.ts"]
+  "include": ["src/**/*"]
 }
