@@ -629,3 +629,59 @@ test('test ABAC multiple eval()', async () => {
   await testEnforce(e, 23, (67 as unknown) as string, 'read', false);
   await testEnforce(e, 78, (34 as unknown) as string, 'read', false);
 });
+
+test('TestEnforceEx Multiple policies config', async () => {
+  const m = newModel();
+  m.addDef('r', 'r2', 'sub, obj, act');
+  m.addDef('p', 'p2', 'sub, obj, act');
+  m.addDef('g', 'g', '_, _');
+  m.addDef('e', 'e2', 'some(where (p.eft == allow))');
+  m.addDef('m', 'm2', 'g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act');
+
+  const e = await getEnforcerWithPath(m);
+
+  await e.useEnforceContext('r2', 'p2', 'e2', 'm2');
+  await e.addPermissionForUser('alice', 'data1', 'invalid');
+  testEnforceEx(e, 'alice', 'data1', 'read', [false, []]);
+  testEnforceEx(e, 'alice', 'data1', 'invalid', [true, ['alice', 'data1', 'invalid']]);
+});
+
+test('TestEnforce Multiple policies config', async () => {
+  const m = newModel();
+  m.addDef('r', 'r2', 'sub, obj, act');
+  m.addDef('p', 'p2', 'sub, obj, act');
+  m.addDef('g', 'g', '_, _');
+  m.addDef('e', 'e2', 'some(where (p.eft == allow))');
+  m.addDef('m', 'm2', 'g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act');
+
+  const e = await getEnforcerWithPath(m);
+
+  await e.useEnforceContext('r2', 'p2', 'e2', 'm2');
+  await e.addPermissionForUser('alice', 'data1', 'invalid');
+  testEnforce(e, 'alice', 'data1', 'read', false);
+  testEnforce(e, 'alice', 'data1', 'invalid', true);
+});
+
+test('TestNotUsedRBACModelInMemory Multiple policies config', async () => {
+  const m = newModel();
+  m.addDef('r', 'r2', 'sub, obj, act');
+  m.addDef('p', 'p2', 'sub, obj, act');
+  m.addDef('g', 'g', '_, _');
+  m.addDef('e', 'e2', 'some(where (p.eft == allow))');
+  m.addDef('m', 'm2', 'g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act');
+
+  const e = await newEnforcer(m);
+
+  await e.useEnforceContext('r2', 'p2', 'e2', 'm2');
+  await e.addPermissionForUser('alice', 'data1', 'read');
+  await e.addPermissionForUser('bob', 'data2', 'write');
+
+  testEnforce(e, 'alice', 'data1', 'read', true);
+  testEnforce(e, 'alice', 'data1', 'write', false);
+  testEnforce(e, 'alice', 'data2', 'read', false);
+  testEnforce(e, 'alice', 'data2', 'write', false);
+  testEnforce(e, 'bob', 'data1', 'read', false);
+  testEnforce(e, 'bob', 'data1', 'write', false);
+  testEnforce(e, 'bob', 'data2', 'read', false);
+  testEnforce(e, 'bob', 'data2', 'write', true);
+});
