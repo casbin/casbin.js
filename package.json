@@ -1,6 +1,6 @@
 {
   "name": "casbin.js",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "An authorization library that supports access control models like ACL, RBAC, ABAC in Typescript",
   "main": "lib/cjs/index.js",
   "typings": "lib/cjs/index.d.ts",
@@ -67,7 +67,7 @@
   "homepage": "https://casbin.org",
   "repository": {
     "type": "git",
-    "url": "https://github.com/casbin/node-casbin.git"
+    "url": "https://github.com/casbin/casbin.js.git"
   },
   "license": "Apache-2.0",
   "husky": {
@@ -80,5 +80,9 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   }
 }

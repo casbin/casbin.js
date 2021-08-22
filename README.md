@@ -2,7 +2,7 @@
 
 [![NPM version][npm-image]][npm-url]
 [![NPM download][download-image]][download-url]
-[![install size](https://packagephobia.now.sh/badge?p=casbin)](https://packagephobia.now.sh/result?p=casbin)
+[![install size](https://packagephobia.now.sh/badge?p=casbin.js)](https://packagephobia.now.sh/result?p=casbin)
 [![codebeat badge](https://codebeat.co/badges/c17c9ee1-da42-4db3-8047-9574ad2b23b1)](https://codebeat.co/projects/github-com-casbin-casbin.js-master)
 [![GitHub Actions](https://github.com/casbin/casbin.js/workflows/main/badge.svg)](https://github.com/casbin/casbin.js/actions)
 [![Coverage Status](https://coveralls.io/repos/github/casbin/casbin.js/badge.svg?branch=master)](https://coveralls.io/github/casbin/casbin.js?branch=master)
@@ -40,23 +40,46 @@ https://casbin.org/docs/en/overview
 
 ```shell script
 # NPM
-npm install casbin --save
+npm install casbin.js@next --save
 
 # Yarn
-yarn add casbin
+yarn add casbin.js@next
 ```
 
 ## Get started
 
-New a `casbin.js` enforcer with a model file and a policy file, see [Model](#official-model) section for details:
+New a `casbin.js` enforcer with a model string and a memory policy, see [Model](#official-model) section for details:
 
 ```node.js
-// For Node.js:
-const { newEnforcer } = require('casbin');
-// For browser:
-// import { newEnforcer } from 'casbin';
+import { newEnforcer, newModel, MemoryAdapter } from 'casbin.js';
 
-const enforcer = await newEnforcer('basic_model.conf', 'basic_policy.csv');
+const model = newModel(`
+[request_definition]
+r = sub, obj, act
+
+[policy_definition]
+p = sub, obj, act
+
+[role_definition]
+g = _, _
+
+[policy_effect]
+e = some(where (p.eft == allow))
+
+[matchers]
+m = g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act
+`);
+
+const adapter = new MemoryAdapter(`
+p, alice, data1, read
+p, bob, data2, write
+p, data2_admin, data2, read
+p, data2_admin, data2, write
+
+g, alice, data2_admin
+`);
+
+const enforcer = await newEnforcer(model, adapter);
 ```
 
 > **Note**: you can also initialize an enforcer with policy in DB instead of file, see [Persistence](#policy-persistence) section for details.
