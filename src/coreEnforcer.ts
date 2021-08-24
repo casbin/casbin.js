@@ -50,7 +50,6 @@ export class CoreEnforcer {
   protected eft: Effector = new DefaultEffector();
   private matcherMap: Map<string, Matcher> = new Map();
   private defaultEnforceContext: EnforceContext = new EnforceContext('r', 'p', 'e', 'm');
-  private enforceContext: EnforceContext = this.defaultEnforceContext;
 
   protected adapter: Adapter;
   protected watcher: Watcher | null = null;
@@ -574,7 +573,11 @@ export class CoreEnforcer {
    * @return whether to allow the request.
    */
   public enforceSync(...rvals: any[]): boolean {
-    return generatorRunSync(this.privateEnforce(false, false, this.enforceContext, ...rvals));
+    if (rvals[0] instanceof EnforceContext) {
+      const enforceContext: EnforceContext = rvals.shift();
+      return generatorRunSync(this.privateEnforce(false, false, enforceContext, ...rvals));
+    }
+    return generatorRunSync(this.privateEnforce(false, false, this.defaultEnforceContext, ...rvals));
   }
 
   /**
@@ -588,7 +591,11 @@ export class CoreEnforcer {
    * @return whether to allow the request and the reason rule.
    */
   public enforceExSync(...rvals: any[]): [boolean, string[]] {
-    return generatorRunSync(this.privateEnforce(false, true, this.enforceContext, ...rvals));
+    if (rvals[0] instanceof EnforceContext) {
+      const enforceContext: EnforceContext = rvals.shift();
+      return generatorRunSync(this.privateEnforce(false, true, enforceContext, ...rvals));
+    }
+    return generatorRunSync(this.privateEnforce(false, true, this.defaultEnforceContext, ...rvals));
   }
 
   /**
@@ -607,7 +614,11 @@ export class CoreEnforcer {
    * @return whether to allow the request.
    */
   public async enforce(...rvals: any[]): Promise<boolean> {
-    return generatorRunAsync(this.privateEnforce(true, false, this.enforceContext, ...rvals));
+    if (rvals[0] instanceof EnforceContext) {
+      const enforceContext: EnforceContext = rvals.shift();
+      return generatorRunAsync(this.privateEnforce(true, false, enforceContext, ...rvals));
+    }
+    return generatorRunAsync(this.privateEnforce(true, false, this.defaultEnforceContext, ...rvals));
   }
 
   /**
@@ -619,10 +630,10 @@ export class CoreEnforcer {
    * @return whether to allow the request and the reason rule.
    */
   public async enforceEx(...rvals: any[]): Promise<[boolean, string[]]> {
-    return generatorRunAsync(this.privateEnforce(true, true, this.enforceContext, ...rvals));
-  }
-
-  public useEnforceContext(rType: string, pType: string, eType: string, mType: string): void {
-    this.enforceContext = new EnforceContext(rType, pType, eType, mType);
+    if (rvals[0] instanceof EnforceContext) {
+      const enforceContext: EnforceContext = rvals.shift();
+      return generatorRunAsync(this.privateEnforce(true, true, enforceContext, ...rvals));
+    }
+    return generatorRunAsync(this.privateEnforce(true, true, this.defaultEnforceContext, ...rvals));
   }
 }
