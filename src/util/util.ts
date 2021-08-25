@@ -18,9 +18,9 @@
 import { RoleManager } from '../rbac';
 
 function escapeAssertion(s: string): string {
-  s = s.replace(/r\./g, 'r_');
-  s = s.replace(/p\./g, 'p_');
-  return s;
+  return s.replace(/([rp])\.|[0-9]\./g, (match) => {
+    return match.replace('.', '_');
+  });
 }
 
 // removeComments removes the comments starting with # in the text.

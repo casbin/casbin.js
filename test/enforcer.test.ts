@@ -631,22 +631,6 @@ test('test ABAC multiple eval()', async () => {
   await testEnforce(e, 78, (34 as unknown) as string, 'read', false);
 });
 
-test('TestEnforceEx Multiple policies config', async () => {
-  const m = newModel();
-  m.addDef('r', 'r2', 'sub, obj, act');
-  m.addDef('p', 'p2', 'sub, obj, act');
-  m.addDef('g', 'g', '_, _');
-  m.addDef('e', 'e2', 'some(where (p.eft == allow))');
-  m.addDef('m', 'm2', 'g(r.sub, p.sub) && r.obj == p.obj && r.act == p.act');
-
-  const e = await getEnforcerWithPath(m);
-
-  const enforceContext = new EnforceContext('r2', 'p2', 'e2', 'm2');
-  await e.addPermissionForUser('alice', 'data1', 'invalid');
-  await expect(e.enforceEx(enforceContext, 'alice', 'data1', 'read')).resolves.toBe([false, []]);
-  //await expect(e.enforceEx(enforceContext, 'alice', 'data1', 'invalid')).resolves.toBe([true, ['alice', 'data1', 'invalid']]);
-});
-
 test('TestEnforce Multiple policies config', async () => {
   const m = newModel();
   m.addDef('r', 'r2', 'sub, obj, act');
@@ -654,14 +638,12 @@ test('TestEnforce Multiple policies config', async () => {
   m.addDef('g', 'g', '_, _');
   m.addDef('e', 'e2', 'some(where (p.eft == allow))');
   m.addDef('m', 'm2', 'g(r2.sub, p2.sub) && r2.obj == p2.obj && r2.act == p2.act');
-  const a = getStringAdapter('test/basic_policy.csv');
+  const a = getStringAdapter('examples/mulitple_policy.csv');
 
   const e = await newEnforcer(m, a);
 
   //const e = await getEnforcerWithPath(m);
   const enforceContext = new EnforceContext('r2', 'p2', 'e2', 'm2');
-  //await e.addPermissionForUser('alice', 'data1', 'invalid');
-  // await expect(e.enforceEx(enforceContext, 'alice', 'data', 'read')).resolves.toBe([false, []]);
-  // await expect(e.enforceEx(enforceContext, 'alice', 'data1', 'read')).resolves.toBe([true, ['alice', 'data1', 'read']]);
+  await expect(e.enforceEx(enforceContext, 'alice', 'data1', 'read')).resolves.toStrictEqual([true, ['alice', 'data1', 'read']]);
   await expect(e.enforceEx(enforceContext, 'bob', 'data2', 'write')).resolves.toStrictEqual([true, ['bob', 'data2', 'write']]);
 });
