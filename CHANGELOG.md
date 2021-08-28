@@ -1,3 +1,10 @@
+# [1.0.0-beta.3](https://github.com/casbin/casbin.js/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2021-08-28)
+
+
+### Features
+
+* Multiple sections type ([2635601](https://github.com/casbin/casbin.js/commit/2635601ab1b1dd8d613bbb6b62d52f1cb86400f6))
+
 # [1.0.0-beta.2](https://github.com/casbin/casbin.js/compare/v1.0.0-beta.1...v1.0.0-beta.2) (2021-08-22)
 
 
