@@ -18,7 +18,10 @@
 import { RoleManager } from '../rbac';
 
 function escapeAssertion(s: string): string {
-  return s.replace(/([rp])\.|[0-9]\./g, (match) => {
+  if (s.startsWith('r') || s.startsWith('p')) {
+    s = s.replace('.', '_');
+  }
+  return s.replace(/([| =)(&<>,+\-!*\/])([rp][0-9]*)\./g, (match) => {
     return match.replace('.', '_');
   });
 }

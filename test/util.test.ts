@@ -190,3 +190,19 @@ test('test keyGet2Func', () => {
   expect(util.keyGet2Func('/baz', '/foo', 'bar')).toEqual('');
   expect(util.keyGet2Func('/foo/baz', '/foo', 'bar')).toEqual('');
 });
+
+test('test escapeAssertion', () => {
+  expect(util.escapeAssertion('r.attr.value == p.attr')).toEqual('r_attr.value == p_attr');
+  expect(util.escapeAssertion('r.attp.value || p.attr')).toEqual('r_attp.value || p_attr');
+  expect(util.escapeAssertion('r.attp.value && p.attr')).toEqual('r_attp.value && p_attr');
+  expect(util.escapeAssertion('r.attp.value >p.attr')).toEqual('r_attp.value >p_attr');
+  expect(util.escapeAssertion('r.attp.value <p.attr')).toEqual('r_attp.value <p_attr');
+  expect(util.escapeAssertion('r.attp.value +p.attr')).toEqual('r_attp.value +p_attr');
+  expect(util.escapeAssertion('r.attp.value -p.attr')).toEqual('r_attp.value -p_attr');
+  expect(util.escapeAssertion('r.attp.value *p.attr')).toEqual('r_attp.value *p_attr');
+  expect(util.escapeAssertion('r.attp.value /p.attr')).toEqual('r_attp.value /p_attr');
+  expect(util.escapeAssertion('!r.attp.value /p.attr')).toEqual('!r_attp.value /p_attr');
+  expect(util.escapeAssertion('g(r.sub, p.sub) == p.attr')).toEqual('g(r_sub, p_sub) == p_attr');
+  expect(util.escapeAssertion('g(r.sub,p.sub) == p.attr')).toEqual('g(r_sub,p_sub) == p_attr');
+  expect(util.escapeAssertion('(r.attp.value || p.attr)p.u')).toEqual('(r_attp.value || p_attr)p_u');
+});
