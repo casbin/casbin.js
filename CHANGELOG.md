@@ -1,3 +1,10 @@
+# [1.0.0-beta.4](https://github.com/casbin/casbin.js/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2021-08-31)
+
+
+### Features
+
+* Extend multiple sections type of escapeAssertion ([#180](https://github.com/casbin/casbin.js/issues/180)) ([4a8cc10](https://github.com/casbin/casbin.js/commit/4a8cc106862bee79fb1533338bde16669d40f5f5))
+
 # [1.0.0-beta.3](https://github.com/casbin/casbin.js/compare/v1.0.0-beta.2...v1.0.0-beta.3) (2021-08-28)
 
 
