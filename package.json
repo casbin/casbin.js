@@ -44,7 +44,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
-    "@babel/core": "^7.15.0",
+    "@babel/core": "^7.15.4",
     "@babel/preset-env": "^7.15.4",
     "axios": "^0.21.1",
     "babel-loader": ">=8.1.0",
