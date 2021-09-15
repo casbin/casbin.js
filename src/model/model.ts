@@ -306,6 +306,29 @@ export class Model {
     return true;
   }
 
+  public updatePolicies(sec: string, ptype: string, oldRules: string[][], newRules: string[][]): [boolean, string[][]] {
+    const ast = this.model.get(sec)?.get(ptype);
+    if (!ast) {
+      return [false, []];
+    }
+
+    for (const rule of oldRules) {
+      if (this.hasPolicy(sec, ptype, rule)) {
+        return [false, []];
+      }
+    }
+    if (newRules.length !== oldRules.length) {
+      throw new Error('The new policy does not match the old policy');
+    }
+    const rules = [];
+    for (let i = 0; i <= oldRules.length; i++) {
+      if (this.updatePolicy(sec, ptype, oldRules[i], newRules[i]) === true) {
+        rules.push(newRules[i]);
+      }
+    }
+    return [true, rules];
+  }
+
   // removePolicy removes a policy rule from the model.
   public removePolicy(sec: string, key: string, rule: string[]): boolean {
     if (this.hasPolicy(sec, key, rule)) {

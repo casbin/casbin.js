@@ -19,4 +19,5 @@ export interface UpdatableAdapter extends Adapter {
   // UpdatePolicy updates a policy rule from storage.
   // This is part of the Auto-Save feature.
   updatePolicy(sec: string, ptype: string, oldRule: string[], newRule: string[]): Promise<void>;
+  updatePolicies(sec: string, ptype: string, oldRule: string[][], newRule: string[][]): Promise<void>;
 }

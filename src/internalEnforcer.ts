@@ -120,7 +120,43 @@ export class InternalEnforcer extends CoreEnforcer {
       await this.buildIncrementalRoleLinks(PolicyOp.PolicyRemove, ptype, [oldRule]);
       await this.buildIncrementalRoleLinks(PolicyOp.PolicyAdd, ptype, [newRule]);
     }
+    return ok;
+  }
 
+  /**
+   * updatePoliciesInternal updates a rule from the current policy.
+   */
+  public async updatePoliciesInternal(sec: string, ptype: string, oldRules: string[][], newRules: string[][]): Promise<boolean> {
+    for (const rule of oldRules) {
+      if (this.model.hasPolicy(sec, ptype, rule)) {
+        return false;
+      }
+    }
+    if (this.autoSave) {
+      if ('updatePolicies' in this.adapter) {
+        try {
+          await (this.adapter as UpdatableAdapter).updatePolicies(sec, ptype, oldRules, newRules);
+        } catch (e) {
+          if (e.message !== 'not implemented') {
+            throw e;
+          }
+        }
+      } else {
+        throw new Error('cannot to update policies, the adapter does not implement the UpdatableAdapter');
+      }
+    }
+
+    if (this.watcher && this.autoNotifyWatcher) {
+      // In fact I think it should wait for the respond, but they implement add_policy() like this
+      // error intentionally ignored
+      this.watcher.update();
+    }
+
+    const [ok, effects] = this.model.updatePolicies(sec, ptype, oldRules, newRules);
+    if (sec === 'g' && ok) {
+      await this.buildIncrementalRoleLinks(PolicyOp.PolicyRemove, ptype, oldRules);
+      await this.buildIncrementalRoleLinks(PolicyOp.PolicyAdd, ptype, newRules);
+    }
     return ok;
   }
 
