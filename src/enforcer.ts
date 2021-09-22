@@ -357,6 +357,32 @@ export class Enforcer extends ManagementEnforcer {
 
     return res.filter((n) => !inherits.some((m) => n === m));
   }
+
+  /**
+   * getUsersForRoleInDomain gets the users from name and domain.
+   *
+   * @param name the user.
+   * @param domain the domain.
+   * @return the users that for role in domain.
+   */
+  public async getUsersForRoleInDomain(name: string, domain: string): Promise<string[]> {
+    const rm = this.rmMap.get('g');
+    if (rm) return rm.getUsers(name, domain);
+    throw new Error("RoleManager didn't exist.");
+  }
+
+  /**
+   * getRolesForUserInDomain gets the users from name and domain.
+   *
+   * @param name the user.
+   * @param domain the domain.
+   * @return the roles that for user in domain.
+   */
+  public async getRolesForUserInDomain(name: string, domain: string): Promise<string[]> {
+    const rm = this.rmMap.get('g');
+    if (rm) return rm.getRoles(name, domain);
+    throw new Error("RoleManager didn't exist.");
+  }
 }
 
 export async function newEnforcerWithClass<T extends Enforcer>(enforcer: new () => T, ...params: any[]): Promise<T> {

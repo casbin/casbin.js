@@ -159,6 +159,16 @@ test('test deleteUser', async () => {
   expect(await e.getImplicitPermissionsForUser('bob')).toEqual([]);
 });
 
+test('test getRolesForUserInDomain', async () => {
+  const e = await getEnforcerWithPath('examples/rbac_with_domains_model.conf', 'examples/rbac_with_hierarchy_with_domains_policy.csv');
+  expect(await e.getRolesForUserInDomain('alice', 'domain1')).toEqual(['role:global_admin']);
+});
+
+test('test getRolesForUserInDomain', async () => {
+  const e = await getEnforcerWithPath('examples/rbac_with_domains_model.conf', 'examples/rbac_with_hierarchy_with_domains_policy.csv');
+  expect(await e.getRolesForUserInDomain('alice', 'domain1')).toEqual(['role:global_admin']);
+});
+
 test('test getImplicitUsersForPermission', async () => {
   const e = await getEnforcerWithPath('examples/rbac_model.conf', 'examples/rbac_with_hierarchy_policy.csv');
   expect(await e.getImplicitUsersForPermission('data1', 'read')).toEqual(['alice']);
