@@ -145,6 +145,19 @@ export class Enforcer extends ManagementEnforcer {
   }
 
   /**
+   * addRoleForUserInDomain adds a role for a user.
+   * Returns false if the user already has the role (aka not affected).
+   *
+   * @param user the user.
+   * @param role the role.
+   * @param domain the domain.
+   * @return succeeds or not.
+   */
+  public async addRoleForUserInDomain(user: string, role: string, domain: string): Promise<boolean> {
+    return this.addGroupingPolicy(user, role, domain);
+  }
+
+  /**
    * deleteRoleForUser deletes a role for a user.
    * Returns false if the user does not have the role (aka not affected).
    *
@@ -159,6 +172,18 @@ export class Enforcer extends ManagementEnforcer {
     } else {
       return this.removeGroupingPolicy(user, role, domain);
     }
+  }
+  /**
+   * deleteRoleForUserInDomain deletes a role for a user.
+   * Returns false if the user does not have the role (aka not affected).
+   *
+   * @param user the user.
+   * @param role the role.
+   * @param domain the domain.
+   * @return succeeds or not.
+   */
+  public async deleteRoleForUserInDomain(user: string, role: string, domain?: string): Promise<boolean> {
+    return this.deleteRoleForUser(user, role, domain);
   }
 
   /**
@@ -175,6 +200,18 @@ export class Enforcer extends ManagementEnforcer {
     } else {
       return this.removeFilteredGroupingPolicy(0, user, '', domain);
     }
+  }
+
+  /**
+   * deleteRolesForUserInDomain deletes all roles for a user.
+   * Returns false if the user does not have any roles (aka not affected).
+   *
+   * @param user the user.
+   * @param domain the domain.
+   * @return succeeds or not.
+   */
+  public async deleteRolesForUserInDomain(user: string, domain?: string): Promise<boolean> {
+    return this.deleteRolesForUser(user, domain);
   }
 
   /**
@@ -313,6 +350,7 @@ export class Enforcer extends ManagementEnforcer {
    * getPermissionsForUser("alice") can only get: [["alice", "data2", "read"]].
    * But getImplicitPermissionsForUser("alice") will get: [["admin", "data1", "read"], ["alice", "data2", "read"]].
    */
+
   public async getImplicitPermissionsForUser(user: string, ...domain: string[]): Promise<string[][]> {
     const roles = await this.getImplicitRolesForUser(user, ...domain);
     roles.unshift(user);
@@ -329,6 +367,16 @@ export class Enforcer extends ManagementEnforcer {
       }
     }
 
+    return res;
+  }
+
+  /**
+   * getPermissionsForUserInDomain gets implicit permissions for a user or role.
+   * Compared to getPermissionsForUser(), this function retrieves permissions for inherited roles.
+   */
+
+  public async getPermissionsForUserInDomain(user: string, domain: string): Promise<string[][]> {
+    const res = await this.getImplicitPermissionsForUser(user, domain);
     return res;
   }
 
