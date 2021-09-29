@@ -1,3 +1,10 @@
+# [1.0.0-beta.5](https://github.com/casbin/casbin.js/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2021-09-29)
+
+
+### Features
+
+* RBAC with Domains API ([5e49b41](https://github.com/casbin/casbin.js/commit/5e49b41a2988a20e324715377e0c8302c9e9c3aa))
+
 # [1.0.0-beta.4](https://github.com/casbin/casbin.js/compare/v1.0.0-beta.3...v1.0.0-beta.4) (2021-08-31)
 
 
