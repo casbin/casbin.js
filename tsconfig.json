@@ -8,8 +8,7 @@
     "declaration": true,
     "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "rootDir": "./src"
+    "esModuleInterop": true
   },
   "include": ["src/**/*"]
 }
