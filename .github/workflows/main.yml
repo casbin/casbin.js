@@ -41,8 +41,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Run semantic-release
-        # only allowed in V1 branch.
-        if: github.repository == 'casbin/casbin.js' && github.event_name == 'push' && github.ref == 'refs/heads/v1'
+        if: github.repository == 'casbin/casbin.js' && github.event_name == 'push'
         run: yarn install && yarn semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
