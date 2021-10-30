@@ -40,10 +40,10 @@ https://casbin.org/docs/en/overview
 
 ```shell script
 # NPM
-npm install casbin.js@next --save
+npm install casbin.js --save
 
 # Yarn
-yarn add casbin.js@next
+yarn add casbin.js
 ```
 
 ## Get started

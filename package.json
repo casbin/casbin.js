@@ -90,7 +90,7 @@
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
-    "tag": "next"
+    "tag": "latest"
   },
   "browser": {
     "path": "path-browserify"
