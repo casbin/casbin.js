@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/casbin/casbin.js/compare/v1.0.0...v1.0.1) (2021-10-30)
+
+
+### Bug Fixes
+
+* update doc and release channel ([da52e9b](https://github.com/casbin/casbin.js/commit/da52e9b59543076fa29d52328f3a938d2be7e07c))
+
 # 1.0.0 (2021-10-30)
 
 
