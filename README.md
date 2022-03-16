@@ -7,6 +7,19 @@
 
 Casbin.js is a frontend port of a backend Casbin service, which facilitates the manipulation, management and storage of the user permission in a frontend application.
 
+## Version confusion
+
+**The important note that the `casbin.js@1` has been deprecated:**  
+If you are using this version, you must change your package from `casbin.js@1` to `casbin@next`, the API is fully compatible. 
+
+We have released versions `casbin.js@0` and `casbin.js@1`, and the `casbin.js@2` will release, which equivalent to `casbin.js@0`.
+
+**`casbin` vs `casbin.js`:**
+
+`casbin` is an authorization library that supports access control models like ACL, RBAC, ABAC and can be used in any JavaScript platform.
+
+`casbin.js` is a frontend port of a backend Casbin service, which can be check operation permissions in a frontend application, and this depends on `casbin` API.
+
 ## Example
 
 We demostrate the usage of Casbin.js with [a React app](https://github.com/casbin-js/examples/tree/master/react). View the code to see more details.
