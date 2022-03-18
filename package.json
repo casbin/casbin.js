@@ -48,7 +48,7 @@
     "@babel/preset-env": "^7.16.11",
     "axios": "^0.21.4",
     "babel-loader": ">=8.2.3",
-    "casbin": "^5.11.5",
+    "casbin": "^5.14.0",
     "js-cookie": "^3.0.1"
   }
 }
