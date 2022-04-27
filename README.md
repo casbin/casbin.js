@@ -37,7 +37,7 @@ authorizer.cannot("write", "data2").then(result => {
 });
 ```
 
-You can also use the `auto` mode. In details, specify an casbin backend service endpoint when initialize the Casbin.js authorizer, and set the subject when the frontend user identity changes. Casbin.js will automatically fetch the permission from the endpoint. (A pre-configurated casbin service API is required at the backend.)
+You can also use the `auto` mode. In details, specify a casbin backend service endpoint when initializing the Casbin.js authorizer, and set the subject when the frontend user identity changes. Casbin.js will automatically fetch the permission from the endpoint. (A pre-configurated casbin service API is required at the backend.)
 ```javascript
 const casbinjs = require('casbin.js');
 
