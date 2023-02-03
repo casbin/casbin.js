@@ -1889,9 +1889,9 @@ atob@^2.1.2:
   integrity sha1-bZUX654DDSQ2ZmZR6GvZ9vE1M8k=
 
 await-lock@^2.0.1:
-  version "2.1.0"
-  resolved "https://registry.npm.taobao.org/await-lock/download/await-lock-2.1.0.tgz#bc78c51d229a34d5d90965a1c94770e772c6145e"
-  integrity sha1-vHjFHSKaNNXZCWWhyUdw53LGFF4=
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/await-lock/-/await-lock-2.2.2.tgz#a95a9b269bfd2f69d22b17a321686f551152bcef"
+  integrity sha512-aDczADvlvTGajTDjcjpJMqRkOF6Qdz3YbPZm/PyW6tKPkx2hlYBzxMhEywM/tU72HrVZjgl5VCdRuMlA7pZ8Gw==
 
 aws-sign2@~0.7.0:
   version "0.7.0"
@@ -2017,6 +2017,11 @@ balanced-match@^1.0.0:
   resolved "https://registry.npm.taobao.org/balanced-match/download/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
+base64-js@^1.3.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/base64-js/-/base64-js-1.5.1.tgz#1b1b440160a5bf7ad40b650f095963481903930a"
+  integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
+
 base@^0.11.1:
   version "0.11.2"
   resolved "https://registry.npm.taobao.org/base/download/base-0.11.2.tgz#7bde5ced145b6d551a90db87f83c558b4eb48a8f"
@@ -2100,6 +2105,13 @@ brace-expansion@^1.1.7:
     balanced-match "^1.0.0"
     concat-map "0.0.1"
 
+brace-expansion@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/brace-expansion/-/brace-expansion-2.0.1.tgz#1edc459e0f0c548486ecf9fc99f2221364b9a0ae"
+  integrity sha512-XnAIvQ8eM+kC6aULx6wuQiwVsnzsi9d3WxzV3FpWTGA19F621kwdbsAcFKXgKUHZWsy+mY6iL1sHTxWEFCytDA==
+  dependencies:
+    balanced-match "^1.0.0"
+
 braces@^2.3.1, braces@^2.3.2:
   version "2.3.2"
   resolved "https://registry.npm.taobao.org/braces/download/braces-2.3.2.tgz#5979fd3f14cd531565e5fa2df1abfff1dfaee729"
@@ -2162,6 +2174,14 @@ buffer-indexof@^1.0.0:
   version "1.1.1"
   resolved "https://registry.npm.taobao.org/buffer-indexof/download/buffer-indexof-1.1.1.tgz#52fabcc6a606d1a00302802648ef68f639da268c"
   integrity sha1-Uvq8xqYG0aADAoAmSO9o9jnaJow=
+
+buffer@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
+  integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
+  dependencies:
+    base64-js "^1.3.1"
+    ieee754 "^1.2.1"
 
 bytes@3.0.0:
   version "3.0.0"
@@ -2239,15 +2259,15 @@ capture-exit@^2.0.0:
   dependencies:
     rsvp "^4.8.4"
 
-casbin@^5.8.0:
-  version "5.8.0"
-  resolved "https://registry.yarnpkg.com/casbin/-/casbin-5.8.0.tgz#6dc311ab0603aa79f880a43f34bf31203579bdab"
-  integrity sha512-o8hCt0zCbbtFHEpBFwj/cnDkoeKWJjoGh+UCg2AJ3f6zB+xP9NEC8iYhgy8lqYYIH6QtJyWcWOYQQHWTFxH0qA==
+casbin-core@^0.0.0-beta.2:
+  version "0.0.0-beta.2"
+  resolved "https://registry.yarnpkg.com/casbin-core/-/casbin-core-0.0.0-beta.2.tgz#d432d0610f678e1b116af6afa7ca8e29a7240dfb"
+  integrity sha512-yHkpGOPvGsjbfm4xtmnbuMzwuLjhz5tvTKptDAQmSl/UbGJPa+/+wBwSD+rQQ9AJ93cyyMSapweesWfqSKljPQ==
   dependencies:
     await-lock "^2.0.1"
-    csv-parse "^4.15.3"
+    buffer "^6.0.3"
     expression-eval "^4.0.0"
-    picomatch "^2.2.3"
+    minimatch "^5.0.1"
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -2571,11 +2591,6 @@ cssstyle@^2.2.0:
   integrity sha1-/2ZaDdvcMYZLCWR/NBY0Q9kLCFI=
   dependencies:
     cssom "~0.3.6"
-
-csv-parse@^4.15.3:
-  version "4.15.3"
-  resolved "https://registry.npm.taobao.org/csv-parse/download/csv-parse-4.15.3.tgz#8a62759617a920c328cb31c351b05053b8f92b10"
-  integrity sha1-imJ1lhepIMMoyzHDUbBQU7j5KxA=
 
 dashdash@^1.12.0:
   version "1.14.1"
@@ -3929,6 +3944,11 @@ iconv-lite@0.4.24:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
+ieee754@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.2.1.tgz#8eb7a10a63fff25d15a57b001586d177d1b0d352"
+  integrity sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==
+
 ignore@^4.0.6:
   version "4.0.6"
   resolved "https://registry.npm.taobao.org/ignore/download/ignore-4.0.6.tgz?cache=0&sync_timestamp=1590809380232&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fignore%2Fdownload%2Fignore-4.0.6.tgz#750e3db5862087b4737ebac8207ffd1ef27b25fc"
@@ -4807,8 +4827,8 @@ jsdom@^16.4.0:
 
 jsep@^0.3.0:
   version "0.3.5"
-  resolved "https://registry.npm.taobao.org/jsep/download/jsep-0.3.5.tgz#3fd79ebd92f6f434e4857d5272aaeef7d948264d"
-  integrity sha1-P9eevZL29DTkhX1Scqru99lIJk0=
+  resolved "https://registry.yarnpkg.com/jsep/-/jsep-0.3.5.tgz#3fd79ebd92f6f434e4857d5272aaeef7d948264d"
+  integrity sha512-AoRLBDc6JNnKjNcmonituEABS5bcfqDhQAWWXNTFrqu6nVXBpBAGfcoTGZMFlIrh9FjmE1CQyX9CTNwZrXMMDA==
 
 jsesc@^2.5.1:
   version "2.5.2"
@@ -5151,6 +5171,13 @@ minimatch@^3.0.4:
   integrity sha1-UWbihkV/AzBgZL5Ul+jbsMPTIIM=
   dependencies:
     brace-expansion "^1.1.7"
+
+minimatch@^5.0.1:
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-5.1.6.tgz#1cfcb8cf5522ea69952cd2af95ae09477f122a96"
+  integrity sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==
+  dependencies:
+    brace-expansion "^2.0.1"
 
 minimist@^1.1.1, minimist@^1.2.0, minimist@^1.2.5:
   version "1.2.5"
@@ -5667,7 +5694,7 @@ performance-now@^2.1.0:
   resolved "https://registry.npm.taobao.org/performance-now/download/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
-picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.2.1, picomatch@^2.2.3:
+picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.2.1:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.0.tgz#f1f061de8f6a4bf022892e2d128234fb98302972"
   integrity sha512-lY1Q/PiJGC2zOv/z391WOTD+Z02bCgsFfvxoXXf6h7kv9o+WmsmzYqrAwY63sNgOxE4xEdq0WyUnXfKeBrSvYw==

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import * as casbin from 'casbin';
+import * as casbin from 'casbin-core';
 import Permission from './Permission';
 import { StringKV } from './types';
 import * as Cache from './Cache';
@@ -88,7 +88,7 @@ export class Authorizer {
         if (!('m' in obj)) {
             throw Error("No model when init enforcer.");
         }
-        const m = casbin.newModelFromString(obj['m']);
+        const m = new casbin.Model(obj['m']);
         this.enforcer = await casbin.newEnforcer(m);
         if ('p' in obj) {
             for (const sArray of obj['p']) {
