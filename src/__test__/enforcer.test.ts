@@ -1,4 +1,4 @@
-import * as casbin from "casbin"
+import * as casbin from "casbin-core"
 import { Authorizer } from "../Authorizer";
 import { basicModelStr, rbacWithDomainsModelStr} from './models';
 
@@ -70,7 +70,7 @@ m = r.sub == p.sub && r.obj == p.obj && r.act == p.act
 `
 
 test('Load casbin from strings.', async () => {
-    const m = casbin.newModelFromString(s);
+    const m = new casbin.Model(s);
     const e = await casbin.newEnforcer(m);
 
     await e.addPolicy("alice", "data1", "read");
