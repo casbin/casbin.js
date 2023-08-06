@@ -9,7 +9,7 @@ Casbin.js is a frontend port of a backend Casbin service, which facilitates the 
 
 ## Example
 
-We demonstrate the usage of Casbin.js with [a React app](https://github.com/casbin-js/examples/tree/master/react). View the code to see more details.
+We demonstrate the usage of Casbin.js with [a React app](https://github.com/casbin-js/examples/tree/master/src). View the code to see more details.
 
 
 You can use `manual` mode in Casbin.js, and set the permission whenever you wish.
