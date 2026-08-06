@@ -10,6 +10,14 @@ interface BaseResponse {
 
 type Mode = "auto" | "cookies" | "manual"
 
+/**
+ * Whether the object is the model + policies produced by casbin's
+ * "CasbinJsGetPermissionForUser", rather than an action-to-objects map.
+ */
+function isEnforcerData(obj: unknown): obj is Record<string, unknown> {
+    return typeof obj === 'object' && obj !== null && typeof (obj as Record<string, unknown>)['m'] === 'string';
+}
+
 export class Authorizer {
     public mode!: Mode;
     public endpoint: string | undefined = undefined;
@@ -19,6 +27,7 @@ export class Authorizer {
     public cacheExpiredTime  = 60; // Seconds
     public user : string | undefined;
     public enforcer:casbin.Enforcer | undefined;
+    private enforcerPromise: Promise<void> | undefined;
 
     /**
      *
@@ -75,30 +84,63 @@ export class Authorizer {
         }
     }
 
+    /**
+     * Load the permission data.
+     *
+     * Two shapes are accepted:
+     * - A map of actions to objects, e.g. {"read": ["data1", "data2"], "write": ["data1"]}
+     * - The model and policies returned by casbin's "CasbinJsGetPermissionForUser"
+     *   (a JSON object with the keys "m", "p" and "g"). In this case an enforcer is
+     *   built from that data, and "can" evaluates the model instead of a static map.
+     */
     public setPermission(permission : Record<string, unknown> | string) : void{
+        const obj = typeof permission === 'string' ? JSON.parse(permission) : permission;
+        if (isEnforcerData(obj)) {
+            this.enforcerPromise = this.initEnforcer(obj);
+            // The rejection is surfaced when "can" awaits the promise, this only
+            // keeps it from being reported as an unhandled rejection meanwhile.
+            this.enforcerPromise.catch(() => undefined);
+            return;
+        }
         if (this.permission === undefined) {
             this.permission = new Permission();
         }
-        this.permission.load(permission);
+        this.permission.load(obj);
     }
 
-    public async initEnforcer(s: string): Promise<void> {
-        const obj = JSON.parse(s);
+    public async initEnforcer(s: string | Record<string, unknown>): Promise<void> {
+        const obj = typeof s === 'string' ? JSON.parse(s) : s;
         if (!('m' in obj)) {
             throw Error("No model when init enforcer.");
         }
         const m = new casbin.Model(obj['m']);
         this.enforcer = await casbin.newEnforcer(m);
-        if ('p' in obj) {
-            for (const sArray of obj['p']) {
-                let arr = sArray as string[];
-                arr = arr.map(v => v.trim())
-                const pType = arr.shift()
-                if (pType == 'p'){
-                    await this.enforcer.addPolicy(...arr);
-                } else if (pType == 'g'){
-                    await this.enforcer.addGroupingPolicy(...arr);
-                }
+        // "CasbinJsGetPermissionForUser" puts the policies under "p" and the grouping
+        // policies under "g", each rule prefixed with its own ptype.
+        for (const section of ['p', 'g']) {
+            if (section in obj) {
+                await this.loadRules(obj[section]);
+            }
+        }
+    }
+
+    private async loadRules(rules: unknown): Promise<void> {
+        if (!Array.isArray(rules)) {
+            return;
+        }
+        for (const rule of rules) {
+            if (!Array.isArray(rule)) {
+                continue;
+            }
+            const arr = (rule as string[]).map(v => v.trim());
+            const pType = arr.shift();
+            if (!pType) {
+                continue;
+            }
+            if (pType.startsWith('g')) {
+                await (this.enforcer as casbin.Enforcer).addNamedGroupingPolicy(pType, ...arr);
+            } else {
+                await (this.enforcer as casbin.Enforcer).addNamedPolicy(pType, ...arr);
             }
         }
     }
@@ -125,8 +167,11 @@ export class Authorizer {
      * @param user The current user
      */
     public async setUser(user : string) : Promise<void> {
-        if (this.mode == 'auto' && user !== this.user) {
-            this.user = user;
+        if (user === this.user) {
+            return;
+        }
+        this.user = user;
+        if (this.mode == 'auto') {
             let config = Cache.loadFromLocalStorage(user);
             if (config === null) {
                 config = await this.getEnforcerDataFromSvr();
@@ -137,16 +182,20 @@ export class Authorizer {
     }
 
     public async can(action: string, object: string, domain?: string): Promise<boolean> {
-        if (this.mode == "manual") {
-            return this.permission !== undefined && this.permission.check(action, object);
-        } else if (this.mode == "auto") {
-            if (this.enforcer === undefined) {
-                throw Error("Enforcer not initialized");
-            } else if (domain == undefined) {
+        if (this.enforcerPromise !== undefined) {
+            await this.enforcerPromise;
+        }
+        if (this.enforcer !== undefined) {
+            if (domain == undefined) {
                 return await this.enforcer.enforce(this.user, object, action);
             } else {
                 return await this.enforcer.enforce(this.user, domain, object, action);
             }
+        }
+        if (this.mode == "manual") {
+            return this.permission !== undefined && this.permission.check(action, object);
+        } else if (this.mode == "auto") {
+            throw Error("Enforcer not initialized");
         } else {
             throw Error(`Mode ${this.mode} not recognized.`);
         }

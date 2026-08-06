@@ -44,6 +44,23 @@ authorizer.cannot("write", "data2").then(result => {
 });
 ```
 
+In `manual` mode you can also pass the model and policies produced by the backend's
+`CasbinJsGetPermissionForUser` (a JSON object with the keys `m`, `p` and `g`) to
+`setPermission`. Casbin.js then builds a real enforcer from that data, so roles (`g`
+rules) are taken into account. Remember to set the user, since the request is evaluated
+as `(user, object, action)`.
+```javascript
+const authorizer = new casbinjs.Authorizer("manual");
+
+// The JSON string or object returned by CasbinJsGetPermissionForUser
+authorizer.setPermission(responseFromApi);
+await authorizer.setUser("alice");
+
+authorizer.can("read", "data1").then(result => {
+  console.log(result)
+});
+```
+
 You can also use the `auto` mode. In details, specify a casbin backend service endpoint when initializing the Casbin.js authorizer, and set the subject when the frontend user identity changes. Casbin.js will automatically fetch the permission from the endpoint. (A pre-configurated casbin service API is required at the backend.)
 ```javascript
 const casbinjs = require('casbin.js');

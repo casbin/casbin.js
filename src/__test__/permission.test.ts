@@ -35,11 +35,17 @@ describe('Permission unit test', () => {
     })
 
     test('Get action-object mapping', () => {
-        // TODO
+        permission.load(permExample);
+        const actual = permission.getActionsObjects();
+        expect(actual.get('read')).toEqual(['data1', 'data2']);
+        expect(actual.get('write')).toEqual(['data2']);
     });
-    
+
     test('Get object-action mapping', () => {
-        // TODO
+        permission.load(permExample);
+        const actual = permission.getObjectsActions();
+        expect(actual.get('data1')).toEqual(['read']);
+        expect(actual.get('data2')).toEqual(['read', 'write']);
     })
 
 })
