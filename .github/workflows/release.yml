@@ -1,0 +1,106 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+# Manual release. Releases are cut by pushing a tag by hand:
+#
+#   vX.Y.Z-rcN  ->  GitHub *pre-release* only (the candidate to vote on)
+#   vX.Y.Z      ->  GitHub release + publish to npm (after the vote passed)
+#
+# Both cases attach the same Apache source package. The release manager
+# downloads it, signs it locally and takes it to the vote.
+
+name: release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+env:
+  # Base name of the Apache source package, without version/suffix.
+  ARTIFACT_PREFIX: apache-casbin-js
+
+jobs:
+  release:
+    if: github.repository == 'apache/casbin-casbin.js'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version from tag
+        run: |
+          set -euo pipefail
+          TAG="${GITHUB_REF_NAME}"
+          if [[ ! "${TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-rc[0-9]+)?$ ]]; then
+            echo "::error::Tag '${TAG}' is not a release tag. Expected vX.Y.Z or vX.Y.Z-rcN."
+            exit 1
+          fi
+          FULL="${TAG#v}"
+          # The release candidate and the final release are the very same
+          # artifact, so the -rcN suffix never appears in the package name.
+          VERSION="${FULL%-rc*}"
+          if [[ "${FULL}" == *-rc* ]]; then PRERELEASE=true; else PRERELEASE=false; fi
+          echo "VERSION=${VERSION}" >> "${GITHUB_ENV}"
+          echo "PRERELEASE=${PRERELEASE}" >> "${GITHUB_ENV}"
+          echo "SRC_NAME=${ARTIFACT_PREFIX}-${VERSION}-incubating-src" >> "${GITHUB_ENV}"
+
+      - name: Build Apache source package
+        run: |
+          set -euo pipefail
+          git archive --format=tar.gz --prefix="${SRC_NAME}/" -o "${SRC_NAME}.tar.gz" HEAD
+          sha512sum "${SRC_NAME}.tar.gz" > "${SRC_NAME}.tar.gz.sha512"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install Dependency
+        run: yarn install
+
+      - name: Run Unit test
+        run: yarn run test
+
+      # An -rcN tag only ever produces a pre-release; the vote decides whether
+      # it is promoted, which happens by pushing the matching vX.Y.Z tag.
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          FLAGS=""
+          if [[ "${PRERELEASE}" == "true" ]]; then FLAGS="--prerelease"; fi
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "${GITHUB_REF_NAME}" \
+            --generate-notes \
+            ${FLAGS} \
+            "${SRC_NAME}.tar.gz" "${SRC_NAME}.tar.gz.sha512"
+
+      - name: Publish to npm
+        if: env.PRERELEASE == 'false'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          set -euo pipefail
+          npm version "${VERSION}" --no-git-tag-version --allow-same-version
+          npm publish --access public
