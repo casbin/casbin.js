@@ -61,6 +61,34 @@ authorizer.can("read", "data1").then(result => {
 });
 ```
 
+### Users with several roles
+
+A user may hold any number of roles at the same time, and a role may inherit from
+another role. Casbin.js evaluates the `g` rules with the same RBAC engine as the
+backend, so the user gets the permissions of every one of those roles. This needs
+the model and policies described above: the plain `{action: [objects]}` map holds no
+roles at all, only the flattened result.
+```javascript
+// g, alice, admin
+// g, alice, editor
+// g, admin, root
+const authorizer = new casbinjs.Authorizer("manual");
+authorizer.setPermission(responseFromApi);
+await authorizer.setUser("alice");
+
+// Granted by "admin", by "editor", and by the "root" role that "admin" inherits.
+await authorizer.can("read", "data1");
+
+// ["admin", "editor", "root"]
+await authorizer.getRoles();
+
+// [["admin", "data1", "read"], ["editor", "data2", "write"], ...]
+await authorizer.getImplicitPermissions();
+```
+
+For a model with domains, pass the domain to each of them: `authorizer.can("read", "data1", "domain1")`,
+`authorizer.getRoles("domain1")`.
+
 You can also use the `auto` mode. In details, specify a casbin backend service endpoint when initializing the Casbin.js authorizer, and set the subject when the frontend user identity changes. Casbin.js will automatically fetch the permission from the endpoint. (A pre-configurated casbin service API is required at the backend.)
 ```javascript
 const casbinjs = require('casbin.js');

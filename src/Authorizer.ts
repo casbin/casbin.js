@@ -102,6 +102,10 @@ export class Authorizer {
             this.enforcerPromise.catch(() => undefined);
             return;
         }
+        // A previously built enforcer takes precedence in "can", so it has to go
+        // when the permission is replaced by a plain action-to-objects map.
+        this.enforcer = undefined;
+        this.enforcerPromise = undefined;
         if (this.permission === undefined) {
             this.permission = new Permission();
         }
@@ -113,18 +117,25 @@ export class Authorizer {
         if (!('m' in obj)) {
             throw Error("No model when init enforcer.");
         }
+        // Drop the previous state first, so a failed or half-finished load never
+        // leaves the permissions of the former identity in place.
+        this.enforcer = undefined;
+        this.permission = undefined;
         const m = new casbin.Model(obj['m']);
-        this.enforcer = await casbin.newEnforcer(m);
+        const enforcer = await casbin.newEnforcer(m);
         // "CasbinJsGetPermissionForUser" puts the policies under "p" and the grouping
-        // policies under "g", each rule prefixed with its own ptype.
+        // policies under "g", each rule prefixed with its own ptype. The grouping
+        // policies carry the role assignments, including the several roles a single
+        // user may have, and any role that inherits from another role.
         for (const section of ['p', 'g']) {
             if (section in obj) {
-                await this.loadRules(obj[section]);
+                await this.loadRules(enforcer, obj[section]);
             }
         }
+        this.enforcer = enforcer;
     }
 
-    private async loadRules(rules: unknown): Promise<void> {
+    private async loadRules(enforcer: casbin.Enforcer, rules: unknown): Promise<void> {
         if (!Array.isArray(rules)) {
             return;
         }
@@ -138,9 +149,9 @@ export class Authorizer {
                 continue;
             }
             if (pType.startsWith('g')) {
-                await (this.enforcer as casbin.Enforcer).addNamedGroupingPolicy(pType, ...arr);
+                await enforcer.addNamedGroupingPolicy(pType, ...arr);
             } else {
-                await (this.enforcer as casbin.Enforcer).addNamedPolicy(pType, ...arr);
+                await enforcer.addNamedPolicy(pType, ...arr);
             }
         }
     }
@@ -181,11 +192,59 @@ export class Authorizer {
         }
     }
 
+    /**
+     * Get every role of the current user, the roles inherited from another role
+     * included. Only available when the permission was loaded from the data of
+     * "CasbinJsGetPermissionForUser", since a plain action-to-objects map holds
+     * no roles.
+     * @param domain The domain, for a model with domains
+     */
+    public async getRoles(domain?: string): Promise<string[]> {
+        const enforcer = await this.getEnforcer();
+        const user = this.requireUser();
+        return domain === undefined
+            ? await enforcer.getImplicitRolesForUser(user)
+            : await enforcer.getImplicitRolesForUser(user, domain);
+    }
+
+    /**
+     * Get every permission of the current user, the ones coming from the user's
+     * roles included. Same requirement as "getRoles".
+     * @param domain The domain, for a model with domains
+     */
+    public async getImplicitPermissions(domain?: string): Promise<string[][]> {
+        const enforcer = await this.getEnforcer();
+        const user = this.requireUser();
+        return domain === undefined
+            ? await enforcer.getImplicitPermissionsForUser(user)
+            : await enforcer.getImplicitPermissionsForUser(user, domain);
+    }
+
+    private async getEnforcer(): Promise<casbin.Enforcer> {
+        if (this.enforcerPromise !== undefined) {
+            await this.enforcerPromise;
+        }
+        if (this.enforcer === undefined) {
+            throw Error("Enforcer not initialized. Roles are only available when the permission " +
+                "is the model and policies of \"CasbinJsGetPermissionForUser\".");
+        }
+        return this.enforcer;
+    }
+
+    private requireUser(): string {
+        if (this.user === undefined) {
+            throw Error("User is not defined. Call \"setUser\" before evaluating the permission.");
+        }
+        return this.user;
+    }
+
     public async can(action: string, object: string, domain?: string): Promise<boolean> {
         if (this.enforcerPromise !== undefined) {
             await this.enforcerPromise;
         }
         if (this.enforcer !== undefined) {
+            // Without a subject every request would silently be denied.
+            this.requireUser();
             if (domain == undefined) {
                 return await this.enforcer.enforce(this.user, object, action);
             } else {

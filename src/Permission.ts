@@ -17,6 +17,12 @@ export default class Permission {
             p = permission as StringKV;
         }
 
+        // A load replaces the permission, it does not merge into the previous one.
+        // Otherwise the permissions of a former user or role would leak into the
+        // current one when the identity changes.
+        this.actObjData.clear();
+        this.objActData.clear();
+
         // Generate data: {key:Actions, value: Array of objects}
         for (const act in p) {
             this.actObjData.set(act, p[act] as Array<string>);
